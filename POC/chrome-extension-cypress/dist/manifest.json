@@ -12,14 +12,13 @@
     },
 
     "background": {
-        "scripts": ["js/eventPage.js"],
-        "persistent": false
+        "service_worker": "js/eventPage.js"
     },
 
     "icons": {
         "16": "icon16.png",
         "48": "icon48.png",
-        "128": "icon128.png",
+        "128": "icon128.png"
     },
 
     "permissions": []
