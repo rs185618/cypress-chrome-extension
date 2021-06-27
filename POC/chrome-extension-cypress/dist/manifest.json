@@ -1,9 +1,9 @@
 {
     "manifest_version": 3,
 
-    "name": "Chrome Extension (built with TypeScript + React)",
+    "name": "Cypress Assistant",
     "description":
-        "A boilerplate project to quickly build a Chrome extension using TypeScript and React (built using webpack).",
+        "Cypress Assistant",
     "version": "1.0.0",
 
     "action": {
@@ -12,7 +12,7 @@
     },
 
     "background": {
-        "service_worker": "js/eventPage.js"
+        "service_worker": "eventPage.js"
     },
 
     "icons": {
@@ -20,6 +20,31 @@
         "48": "icon48.png",
         "128": "icon128.png"
     },
-
-    "permissions": []
+    "permissions": [
+        "activeTab",
+        "storage",
+        "webNavigation"
+    ],
+    "host_permissions": [
+        "http://*/*",
+        "https://*/*"
+    ],
+    "commands": {
+        "start-recording": {
+            "suggested_key": {
+                "default": "Alt+R",
+                "mac": "MacCtrl+R",
+                "linux": "Alt+R"
+            },
+            "description": "Toggle recording"
+        },
+        "reset-recording": {
+            "suggested_key": {
+                "default": "Alt+G",
+                "mac": "MacCtrl+G",
+                "linux": "Alt+G"
+            },
+            "description": "Reset recording"
+        }
+    }
 }
