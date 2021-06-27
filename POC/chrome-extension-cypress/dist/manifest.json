@@ -6,7 +6,7 @@
         "A boilerplate project to quickly build a Chrome extension using TypeScript and React (built using webpack).",
     "version": "1.0.0",
 
-    "browser_action": {
+    "action": {
         "default_icon": "icon16.png",
         "default_popup": "popup.html"
     },
