@@ -1,19 +1,25 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import { Button } from 'primereact/button';
 
 export const RecordButtons: FC<any>  = ({...props}) => {
-    useEffect(() => {
+    const [recordValue, setRecordValue] = useState(false)
 
-    }, [])
+    useEffect(() => {
+        if (recordValue) { // stop
+
+        } else { // start
+
+        }
+    }, [recordValue])
 
     const record = () => {
-
+        setRecordValue(!recordValue)
     }
 
 
 
     return <div className={'record-buttons-container'}>
-        <Button label="Start Record" onClick={record} />
+        <Button label={`${recordValue ? 'Stop' : 'Start'} Record`} onClick={record} />
         <Button label="Clear" onClick={props.onClearTextArea} />
 
     </div>
