@@ -1,12 +1,17 @@
 import React, {FC, useEffect, useState} from 'react';
 import { Button } from 'primereact/button';
-
+import {selectorPicker}  from '../../../selectorPicker'
 export const RecordButtons: FC<any>  = ({...props}) => {
     const [recordValue, setRecordValue] = useState(false)
 
     useEffect(() => {
         if (recordValue) { // stop
 
+            chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+                chrome.tabs.executeScript(
+                    tabs[0].id,
+                    { code:  selectorPicker(tabs[0])});
+            });
         } else { // start
 
         }
