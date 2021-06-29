@@ -6,12 +6,12 @@ export const RecordButtons: FC<any>  = ({...props}) => {
 
     useEffect(() => {
         if (recordValue) { // stop
-
-            chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+           // chrome.browserAction.onClicked.addListener(selectorPicker);
+            /*chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
                 chrome.tabs.executeScript(
                     tabs[0].id,
                     { code:  selectorPicker(tabs[0])});
-            });
+            });*/
         } else { // start
 
         }

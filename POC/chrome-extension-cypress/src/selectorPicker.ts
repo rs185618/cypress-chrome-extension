@@ -13,8 +13,11 @@ const getClosestParent = (elem, selector = '[id]') => {
     return null;
 
 };
-export const selectorPicker = (doc) => {
-    doc.addEventListener('click', function (event) {
+
+export const selectorPicker = (e) => {
+    console.log('in')
+    console.log(e)
+    e.addEventListener('click', function (event) {
         alert('event.currentTarget ' + event.target)
         const selector = 'data-testid';
         const parent = getClosestParent(event.target, `[${selector}]`);
@@ -22,3 +25,4 @@ export const selectorPicker = (doc) => {
     }, false);
     return '';
 }
+
