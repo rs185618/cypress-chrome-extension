@@ -10,7 +10,7 @@
   "author": "Joe Martella",
   "license": "MIT",
   "devDependencies": {
-    "@types/chrome": "^0.0.60",
+    "@types/chrome": "^0.0.145",
     "@types/react": "^16.9.32",
     "@types/react-dom": "^16.9.6",
     "css-loader": "^3.4.2",
@@ -23,7 +23,8 @@
     "url-loader": "4.1.1",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
-    "webpack-merge": "^4.2.2"
+    "webpack-merge": "^4.2.2",
+    "content-scripts-register-polyfill": "^2.1.2"
   },
   "dependencies": {
     "primeicons": "^4.1.0",

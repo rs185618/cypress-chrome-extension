@@ -1,46 +1,52 @@
 {
-  "manifest_version": 3,
-  "name": "Cypress Assistant",
-  "description": "Cypress Assistant",
-  "version": "1.0.0",
-  "action": {
-    "default_icon": "icon16.png",
-    "default_popup": "popup.html"
-  },
-  "background": {
-    "service_worker": "eventPage.js"
-  },
-  "icons": {
-    "16": "icon16.png",
-    "48": "icon48.png",
-    "128": "icon128.png"
-  },
-  "permissions": [
-    "activeTab",
-    "scripting",
-    "storage",
-    "webNavigation"
-  ],
-  "host_permissions": [
-    "http://*/*",
-    "https://*/*"
-  ],
-  "commands": {
-    "start-recording": {
-      "suggested_key": {
-        "default": "Alt+R",
-        "mac": "MacCtrl+R",
-        "linux": "Alt+R"
-      },
-      "description": "Toggle recording"
+    "manifest_version": 3,
+
+    "name": "Cypress Assistant",
+    "description":
+        "Cypress Assistant",
+    "version": "1.0.0",
+
+    "action": {
+        "default_icon": "icon16.png",
+        "default_popup": "popup.html"
     },
-    "reset-recording": {
-      "suggested_key": {
-        "default": "Alt+G",
-        "mac": "MacCtrl+G",
-        "linux": "Alt+G"
-      },
-      "description": "Reset recording"
+
+    "background": {
+        "service_worker": "eventPage.js"
+    },
+
+    "icons": {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    },
+    "permissions": [
+        "activeTab",
+        "storage",
+        "webNavigation",
+        "scripting"
+    ],
+    "host_permissions": [
+        "http://*/*",
+        "https://*/*"
+    ],
+
+    "commands": {
+        "start-recording": {
+            "suggested_key": {
+                "default": "Alt+R",
+                "mac": "MacCtrl+R",
+                "linux": "Alt+R"
+            },
+            "description": "Toggle recording"
+        },
+        "reset-recording": {
+            "suggested_key": {
+                "default": "Alt+G",
+                "mac": "MacCtrl+G",
+                "linux": "Alt+G"
+            },
+            "description": "Reset recording"
+        }
     }
-  }
 }
