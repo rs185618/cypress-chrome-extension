@@ -24,8 +24,8 @@ export const selectorPicker = () => {
         const cySelector = `${firstSelector} ${parent.tags.split(' ').reverse().join(' ')}`
         const innerText = document.querySelector(cySelector).textContent;
         const color = window.getComputedStyle(document.querySelector(cySelector)).color
-        console.log(`cy.get(${cySelector}).contains('have.text', '${innerText}')`);
-        console.log(`cy.get(${cySelector}).contains('have.css', 'color, '${color}')`);
+        console.log(`cy.get('${cySelector}').contains('have.text', '${innerText}')`);
+        console.log(`cy.get('${cySelector}').contains('have.css', 'color, '${color}')`);
     };
     document.addEventListener('click', useSelector, false);
     document.addEventListener('change', useSelector, false);
