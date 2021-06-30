@@ -15,11 +15,14 @@ export const selectorPicker = () => {
         }
         return null;
     };
-    document.addEventListener('click', function (event) {
+
+    const useSelector = () => {
         const selector = 'data-testid';
         const parent = getClosestParent(event.target, `[${selector}]`);
         const firstTag = parent.elem.getAttribute([selector]);
         const firstSelector = firstTag ? `[${selector}='${firstTag}']` : 'BODY'
         console.log(`${firstSelector} ${parent.tags.split(' ').reverse().join(' ')}`);
-    }, false);
+    };
+    document.addEventListener('click', useSelector, false);
+    document.addEventListener('change', useSelector, false);
 }
