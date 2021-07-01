@@ -1,6 +1,5 @@
 import React, {FC, useEffect, useState} from 'react';
 import { Button } from 'primereact/button';
-import {selectorPicker}  from '../../../selectorPicker'
 export const RecordButtons: FC<any>  = ({...props}) => {
     const [recordValue, setRecordValue] = useState(false)
 
@@ -15,10 +14,15 @@ export const RecordButtons: FC<any>  = ({...props}) => {
         } else { // start
 
         }
+        // return () => {
+        //     chrome.storage.local.set({ "recorder": 'stop' });
+        // }
     }, [recordValue])
 
     const record = () => {
-        setRecordValue(!recordValue)
+        chrome.storage.local.set({ "recorder": `${recordValue  ?  'stop': 'start'}` }, function(){
+            setRecordValue(!recordValue)
+        });
     }
 
 
