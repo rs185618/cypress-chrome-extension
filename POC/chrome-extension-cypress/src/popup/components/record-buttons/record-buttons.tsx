@@ -1,6 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
 import { Button } from 'primereact/button';
 import {selectorPicker}  from '../../../selectorPicker'
+import {makeLogger} from "ts-loader/dist/types/logger";
 export const RecordButtons: FC<any>  = ({...props}) => {
     const [recordValue, setRecordValue] = useState(false)
 
@@ -8,7 +9,22 @@ export const RecordButtons: FC<any>  = ({...props}) => {
         if (recordValue) { // stop
             chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
                 chrome.scripting.executeScript({ target: {tabId: tabs[0].id}, function: selectorPicker } ).then();
-            })
+            });
+
+            // chrome.webRequest.onCompleted.addListener(function (details) {
+            //     // Process the XHR response.
+            //
+            //     chrome.debugger.attach(target=> {
+            //         //console.log('params', params)
+            //         console.log('source', ...target);
+            //        // console.log('method', method)
+            //     }, {} );
+            //     console.log(details)
+            //
+            //
+            // }, {urls: ['<all_urls>']});
+
+
         } else { // start
 
         }

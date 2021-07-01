@@ -26,27 +26,11 @@ export const selectorPicker = () => {
         const color = window.getComputedStyle(document.querySelector(cySelector)).color
         console.log(`cy.get('${cySelector}').contains('have.text', '${innerText}')`);
         console.log(`cy.get('${cySelector}').contains('have.css', 'color, '${color}')`);
-        capture = false;
     };
     const menuPop = ()=>{
 
     };
-    let capture = true;
-    document.addEventListener('click', (e) => {
-        const clickEvent = new MouseEvent('click', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-        });
-        if(capture === true) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            useSelector(e);
-            capture = false;
-            e.target.dispatchEvent(clickEvent);
-        }else{
-            useSelector(e);
-        }
-    }, true);
+
+    document.addEventListener('click', useSelector, true);
     document.addEventListener('change', useSelector, false);
 }
