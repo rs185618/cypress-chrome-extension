@@ -4,10 +4,11 @@ import './cypress-menu.scss';
 import * as ReactDOM from "react-dom";
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
-
+import {useSelector} from "../../selectorPicker";
+import "./cypress-menu.scss";
 const id = 'cypress-menu-assistant';
-const types = [{label: 'Text', value: 'text'}, {label: 'Css', value: 'css'}];
 
+const types = [{label: 'Text', value: 'text'}, {label: 'Css', value: 'css'}]
 const CypressMenu = () => {
     const [selectType, _setSelectType] = useState<any>(null);
     const [menu, setMenu] = useState(false);
@@ -23,6 +24,17 @@ const CypressMenu = () => {
         document.addEventListener('click', (event) => {
             displayMenu(event)
         }, false)
+
+        document.addEventListener('mouseover', (e) => {
+            if (document.querySelector('.menu-container').classList.contains('hide-menu')) {
+                document.querySelector(useSelector(e).cySelector).classList.add('hoverBorder')
+            }
+        }, true);
+        document.addEventListener('mouseout', (e) => {
+            if (document.querySelector('.menu-container').classList.contains('hide-menu')) {
+                document.querySelector(useSelector(e).cySelector).classList.remove('hoverBorder')
+            }
+        })
         // return () => document.removeEventListener('click', displayMenu)
     }, [])
 
@@ -30,9 +42,14 @@ const CypressMenu = () => {
         console.log(selectType);
     }, [selectType])
 
-    const displayMenu = (event) => {
+    const displayMenu = (e) => {
         if (document.querySelector('.menu-container').classList.contains('hide-menu')) {
             setMenu(true)
+            document.querySelector(useSelector(e).cySelector).classList.remove('hoverBorder')
+            document.querySelectorAll('.clickedBorder').forEach(elem => {
+                elem.classList.remove('clickedBorder');
+            });
+            document.querySelector(useSelector(e).cySelector).classList.add('clickedBorder');
         } else {
             setMenu(false)
         }

@@ -30,7 +30,8 @@
         "activeTab",
         "storage",
         "webNavigation",
-        "scripting"
+        "scripting",
+        "webRequest"
     ],
     "host_permissions": [
         "http://*/*",
