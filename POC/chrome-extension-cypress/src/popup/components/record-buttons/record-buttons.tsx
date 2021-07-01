@@ -1,10 +1,16 @@
 import React, {FC, useEffect, useState} from 'react';
 import { Button } from 'primereact/button';
 export const RecordButtons: FC<any>  = ({...props}) => {
-    const [recordValue, setRecordValue] = useState(false)
+    const [recordValue, setRecordValue] = useState('stop')
 
     useEffect(() => {
-        if (recordValue) { // stop
+        chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
+            console.log(items);
+            if (items && items['recorder']) setRecordValue(items['recorder'])
+        });
+    }, [])
+    useEffect(() => {
+        if (recordValue === 'start') { // stop
 
         } else { // start
 
@@ -15,15 +21,18 @@ export const RecordButtons: FC<any>  = ({...props}) => {
     }, [recordValue])
 
     const record = () => {
-        chrome.storage.local.set({ "recorder": `${recordValue  ?  'stop': 'start'}` }, function(){
-            setRecordValue(!recordValue)
+        chrome.storage.local.set({ "recorder": `${recordValue == 'stop' ?  'start': 'stop'}` }, function(){
+            setRecordValue(`${recordValue == 'stop' ?  'start': 'stop'}`)
+            chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
+                console.log(items);
+            });
         });
     }
 
 
 
     return <div className={'record-buttons-container'}>
-        <Button label={`${recordValue ? 'Stop' : 'Start'} Record`} onClick={record} />
+        <Button label={`${recordValue === 'stop' ? 'Start' : 'Stop'} Record`} onClick={record} />
         <Button label="Clear" onClick={props.onClearTextArea} />
 
     </div>

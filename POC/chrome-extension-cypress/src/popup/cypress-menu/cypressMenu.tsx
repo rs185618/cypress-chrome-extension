@@ -2,16 +2,15 @@
 import React, {useEffect, useState} from 'react';
 import './cypress-menu.scss';
 import * as ReactDOM from "react-dom";
-const id = 'cypress-menu-assistant';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
-import {useSelector} from "../../selectorPicker";
 
-const types = [{label: 'Text', value: 'text'}, {label: 'Css', value: 'css'}]
+const id = 'cypress-menu-assistant';
+const types = [{label: 'Text', value: 'text'}, {label: 'Css', value: 'css'}];
+
 const CypressMenu = () => {
-    console.log("hello")
     const [selectType, _setSelectType] = useState<any>(null);
-    const [currentEvent, setCurrentEvent] = useState(null);
+    const [menu, setMenu] = useState(false);
     const typeRef = React.useRef(selectType);
 
     const setSelectType = data => {
@@ -20,64 +19,58 @@ const CypressMenu = () => {
     };
 
     useEffect(() => {
-        document.addEventListener('click', (e) => {
-            if (typeRef.current == 'click') {
-                e.preventDefault();
-                e.stopImmediatePropagation();
-                setCurrentEvent(e);
-                generateCode(e)
-            }
-        }, true);
-        document.addEventListener('change', (e) => {
-            if (typeRef.current == 'click') {
-                generateCode(e)
-            }
-        }, false);
-        return () => {
-            document.removeEventListener('click', generateCode)
-            document.removeEventListener('change', generateCode);
-        }
+
+        document.addEventListener('click', (event) => {
+            displayMenu(event)
+        }, false)
+        // return () => document.removeEventListener('click', displayMenu)
     }, [])
 
     useEffect(() => {
-        if (!selectType && currentEvent) {
-            const clickEvent = new MouseEvent('click', {
-                view: window,
-                bubbles: true,
-                cancelable: true
-            });
-            currentEvent.target.dispatchEvent(clickEvent);
-
-        }
+        console.log(selectType);
     }, [selectType])
 
+    const displayMenu = (event) => {
+        if (document.querySelector('.menu-container').classList.contains('hide-menu')) {
+            setMenu(true)
+        } else {
+            setMenu(false)
+        }
 
-    const generateCode = (event) => {
+    }
+
+
+    const generateCode = () => {
         let generatedCode;
         chrome.storage.local.get(/* String or Array */["selector", "generatedCode"], (items) => {
             console.log(items);
             if (items?.generatedCode) {
                 generatedCode = items['generatedCode']
             }
-            const clickedSelector = useSelector(event).cySelector;
+            const clickedSelector = items['selector'];
             chrome.storage.local.set({ "selector": clickedSelector, "generatedCode": `${generatedCode ? generatedCode + '\n' : ''}cypress.get('${clickedSelector}').click()` }, function(){
                 //  Data's been saved boys and girls, go on home
             });
             console.log(clickedSelector);
-            setSelectType(null);
-
         });
     }
 
-    const onClickChange = () => {
+    const onClickChange = (e) => {
         setSelectType('click')
+        // setMenu(false)
+        // e.preventDefault()
+        // e.stopPropagation()
+        generateCode();
     }
     const onTypeChange = (e) => {
         setSelectType(e.value)
     }
-    return <div className={`menu-container ${selectType ? 'hide-menu' : 'show-menu'}`}>
 
-        <Button label="Click" onClick={onClickChange} />
+    console.log(selectType)
+    console.log(typeRef)
+    return <div className={`menu-container ${menu ? 'show-menu' : 'hide-menu'}`}>
+
+        <Button label="Click" onClick={(e) => onClickChange(e)} />
         <Dropdown value={selectType} options={types} onChange={onTypeChange} placeholder="Contains..." />
 
     </div>
