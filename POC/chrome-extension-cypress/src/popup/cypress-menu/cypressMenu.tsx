@@ -5,12 +5,13 @@ import * as ReactDOM from "react-dom";
 const id = 'cypress-menu-assistant';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
-import {getClosestParent} from "../../selectorPicker";
+import {useSelector} from "../../selectorPicker";
 
 const types = [{label: 'Text', value: 'text'}, {label: 'Css', value: 'css'}]
 const CypressMenu = () => {
     console.log("hello")
     const [selectType, _setSelectType] = useState<any>(null);
+    const [currentEvent, setCurrentEvent] = useState(null);
     const typeRef = React.useRef(selectType);
 
     const setSelectType = data => {
@@ -21,16 +22,33 @@ const CypressMenu = () => {
     useEffect(() => {
         document.addEventListener('click', (e) => {
             if (typeRef.current == 'click') {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                setCurrentEvent(e);
                 generateCode(e)
             }
-        });
+        }, true);
+        document.addEventListener('change', (e) => {
+            if (typeRef.current == 'click') {
+                generateCode(e)
+            }
+        }, false);
         return () => {
             document.removeEventListener('click', generateCode)
+            document.removeEventListener('change', generateCode);
         }
     }, [])
 
     useEffect(() => {
-        console.log(selectType);
+        if (!selectType && currentEvent) {
+            const clickEvent = new MouseEvent('click', {
+                view: window,
+                bubbles: true,
+                cancelable: true
+            });
+            currentEvent.target.dispatchEvent(clickEvent);
+
+        }
     }, [selectType])
 
 
@@ -41,18 +59,12 @@ const CypressMenu = () => {
             if (items?.generatedCode) {
                 generatedCode = items['generatedCode']
             }
-            if (typeRef.current == 'click') {
-                const selector = 'data-testid';
-                const parent = getClosestParent(event.target, `[${selector}]`);
-                const clickedSelector = `[${selector}='${parent.elem.getAttribute([selector])}'] ${parent.tags.split(' ').reverse().join(' ')}`
-
-                chrome.storage.local.set({ "selector": clickedSelector, "generatedCode": `${generatedCode ? generatedCode + '\n' : ''}cypress.get('${clickedSelector}').click()` }, function(){
-                    //  Data's been saved boys and girls, go on home
-                });
-
-                setSelectType(null);
-                console.log(clickedSelector);
-            }
+            const clickedSelector = useSelector(event).cySelector;
+            chrome.storage.local.set({ "selector": clickedSelector, "generatedCode": `${generatedCode ? generatedCode + '\n' : ''}cypress.get('${clickedSelector}').click()` }, function(){
+                //  Data's been saved boys and girls, go on home
+            });
+            console.log(clickedSelector);
+            setSelectType(null);
 
         });
     }
