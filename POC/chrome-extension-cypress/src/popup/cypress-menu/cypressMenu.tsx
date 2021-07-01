@@ -6,7 +6,7 @@ const id = 'cypress-menu-assistant';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import {useSelector} from "../../selectorPicker";
-
+import "./cypress-menu.scss";
 const types = [{label: 'Text', value: 'text'}, {label: 'Css', value: 'css'}]
 const CypressMenu = () => {
     console.log("hello")
@@ -21,6 +21,11 @@ const CypressMenu = () => {
 
     useEffect(() => {
         document.addEventListener('click', (e) => {
+            document.querySelector(useSelector(e).cySelector).classList.remove('hoverBorder')
+            document.querySelectorAll('.clickedBorder').forEach(elem => {
+                elem.classList.remove('clickedBorder');
+            });
+            document.querySelector(useSelector(e).cySelector).classList.add('clickedBorder');
             if (typeRef.current == 'click') {
                 e.preventDefault();
                 e.stopImmediatePropagation();
@@ -33,6 +38,12 @@ const CypressMenu = () => {
                 generateCode(e)
             }
         }, false);
+        document.addEventListener('mouseover', (e) => {
+            document.querySelector(useSelector(e).cySelector).classList.add('hoverBorder')
+        }, true);
+        document.addEventListener('mouseout', (e) => {
+            document.querySelector(useSelector(e).cySelector).classList.remove('hoverBorder')
+        }, true);
         return () => {
             document.removeEventListener('click', generateCode)
             document.removeEventListener('change', generateCode);
