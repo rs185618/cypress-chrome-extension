@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
 import { InputTextarea } from 'primereact/inputtextarea';
 
-export const CodeArea: FC<any>  = ({codeAreaValue, setCodeAreaValue}) => {
+export const CodeArea  = ({codeAreaValue, setCodeAreaValue}) => {
 
     return <div className={'code-area-container'}>
         <div className="card">
