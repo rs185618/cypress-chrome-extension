@@ -81,10 +81,12 @@ const CypressMenu = () => {
                 generatedCode = items['generatedCode']
             }
             const clickedSelector = items['selector'];
-            chrome.storage.local.set({ "selector": clickedSelector, "generatedCode": `$${template.replace('{0}', clickedSelector.cySelector).replace('{1}',clickedSelector.value)}` }
-              , function(){
-                //  Data's been saved boys and girls, go on home
-            });
+            chrome.storage.local.set(
+              { "selector": clickedSelector, "generatedCode":
+                    `${generatedCode ? generatedCode + '\n' : ''}${template.replace('{0}', clickedSelector.cySelector).replace('{1}',clickedSelector.value)}` },
+              function(){
+                  //  Data's been saved boys and girls, go on home
+              });
             console.log(clickedSelector);
         });
     }
