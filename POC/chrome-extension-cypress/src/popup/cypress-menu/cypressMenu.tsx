@@ -2,12 +2,12 @@
 import React, {useEffect, useState} from 'react';
 import './cypress-menu.scss';
 import * as ReactDOM from "react-dom";
-import { Button } from 'primereact/button';
-import { Dropdown } from 'primereact/dropdown';
+import {Button} from 'primereact/button';
+import {Dropdown} from 'primereact/dropdown';
 import {useSelector} from "../../selectorPicker";
 import "./cypress-menu.scss";
 import {TabPanel, TabView} from "primereact/tabview";
-import { CodeArea } from '../components/code-area/code-area';
+
 const id = 'cypress-menu-assistant';
 
 const types = [
@@ -24,11 +24,13 @@ const types = [
 
     {label: 'Css', value: 'have.css'}];
 
-const assertions = {
-    contains: 'contains',
-    'have.value': 'have.value',
-    'have.css': 'have.css'
-}
+// TODO add dropdown for css
+const computedStyle = [
+    {label: 'Background color', value: 'background-color'},
+    {label: 'Color', value: 'color'},
+    {label: 'Width', value: 'width'},
+    {label: 'Height', value: 'height'}
+];
 const CypressMenu = () => {
     const [selectType, _setSelectType] = useState<any>(null);
     const [cySelector, setScySelector] = useState<any>('');
@@ -75,7 +77,7 @@ const CypressMenu = () => {
             document.querySelector(cySelector).classList.add('clickedBorder');
         } else {
 
-            if(e.target.classList.contains("show-menu")
+            if (e.target.classList.contains("show-menu")
                 || e.target.classList.contains("p-tabview-nav-link")
                 || e.target.classList.contains("p-tabview-title")
                 || e.target.classList.contains("p-button")
@@ -111,36 +113,40 @@ const CypressMenu = () => {
 
     const onClickChange = (e) => {
         setSelectType('click')
-        generateCode(`cy.get("${cySelector}").click()`);
+        generateCode(`cy.get("${cySelector}").click();`);
     }
     const onType = () => {
         setSelectType('type');
-        generateCode(`cypress.get("${cySelector}").type("{1}")`);
+        generateCode(`cy.get("${cySelector}").type("{1}");`);
     }
     const onContains = () =>{
         setSelectType('contains');
-        generateCode(`cypress.get("${cySelector}").contains("{2}")`);
+        generateCode(`cy.get("${cySelector}").contains("{2}")`);
     }
     const onTypeChange = (e) => {
         setSelectType(e.value);
         let value = ""
-        if(e.value === "have.value"){
-            if(document.querySelector(cySelector).value){
+        if (e.value === "have.value") {
+            if (document.querySelector(cySelector).value) {
                 value = document.querySelector(cySelector).value;
-                generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}")`);
+                generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}");`);
             }
-        }
-        else if(e.value === "have.css"){
-            value = '"color"',  + window.getComputedStyle(document.querySelector(cySelector)).color;
-            generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}")`);
-        }else if(e.value === "have.length"){
-            if(document.querySelector(cySelector).value){
+        } else if (e.value === "have.css") {
+            let computedStyle = Object.keys(window.getComputedStyle(document.querySelector(cySelector)));
+            console.log('computedStyle', computedStyle)
+            let computedStyleOptions = computedStyle.forEach(attr => {
+                attr : computedStyle[attr]
+            });
+            console.log(computedStyleOptions);
+            value = '"color"', +window.getComputedStyle(document.querySelector(cySelector)).color;
+            generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}");`);
+        } else if (e.value === "have.length") {
+            if (document.querySelector(cySelector).value) {
                 value = document.querySelector(cySelector).value.length;
-                generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}")`);
+                generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}");`);
             }
-        }
-        else{
-            generateCode(`cy.get(${cySelector}).should("${e.value}")`);
+        } else {
+            generateCode(`cy.get(${cySelector}).should("${e.value}");`);
         }
     }
     const cancelEventPropagation = (e) => {
@@ -148,13 +154,14 @@ const CypressMenu = () => {
     }
     return <div className={`menu-container ${menu ? 'show-menu' : 'hide-menu'}`}>
         <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
-            <TabPanel header="Actions" >
-                <Button label="Click" onClick={(e) => onClickChange(e)} />
-                <Button label="Type" onClick={e=>onType()}/>
+            <TabPanel header="Actions">
+                <Button label="Click" onClick={(e) => onClickChange(e)}/>
+                <Button label="Type" onClick={e => onType()}/>
                 <Button label="Contains" onClick={e=>onContains()}/>
             </TabPanel>
-            <TabPanel header="Assertions" >
-                <Dropdown value={selectType} options={types} onChange={onTypeChange} placeholder="Should..." onMouseDown={cancelEventPropagation} data-type="assert-selector" />
+            <TabPanel header="Assertions">
+                <Dropdown value={selectType} options={types} onChange={onTypeChange} placeholder="Should..."
+                          onMouseDown={cancelEventPropagation} data-type="assert-selector"/>
             </TabPanel>
         </TabView>
 
@@ -166,5 +173,5 @@ export const renderMenu = () => {
     el.setAttribute('id', id);
     document.body.appendChild(el);
 
-    return ReactDOM.render(<CypressMenu />, document.getElementById(id));
+    return ReactDOM.render(<CypressMenu/>, document.getElementById(id));
 }
