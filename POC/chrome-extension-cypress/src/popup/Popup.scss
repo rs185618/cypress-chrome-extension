@@ -3,7 +3,7 @@
 @import '../../node_modules/primeicons/primeicons.css';
 
 $primary-color: darkblue;
-$background-color: #BADA55;
+$background-color: rgba(100, 100, 100, .7);
 
 // Chrome applies an 8px margin by default (gross).
 body {
@@ -13,8 +13,7 @@ body {
 .popupContainer {
     align-items: center;
     background-color: $background-color;
-    border: 2px solid $primary-color;
-    color: $primary-color;
+
     display: flex;
     justify-content: center;
 }

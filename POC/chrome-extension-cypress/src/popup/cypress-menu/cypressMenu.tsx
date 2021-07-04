@@ -11,14 +11,23 @@ import { CodeArea } from '../components/code-area/code-area';
 const id = 'cypress-menu-assistant';
 
 const types = [
-    {label: 'Contains', value: 'contains'},
-    {label: 'Text', value: 'text'},
-    {label: 'Css', value: 'css'}];
+    {label: 'Have Value', value: 'have.value'},
+    {label: 'Be Visible', value: 'be.visible'},
+    {label: 'Be Hidden', value: 'not.be.visible'},
+    {label: 'Exist', value: 'exist'},
+    {label: 'Not Exist', value: 'not.exist'},
+    {label: 'Be Checked', value: 'be.checked'},
+    {label: 'Not Be Checked', value: 'not.be.checked'},
+    {label: 'Be Disabled', value: 'be.disabled'},
+    {label: 'Not Be Disabled', value: 'not.be.disabled'},
+    {label: 'Have length', value: 'have.length'},
+
+    {label: 'Css', value: 'have.css'}];
 
 const assertions = {
     contains: 'contains',
-    text: 'have.text',
-    css: 'have.css'
+    'have.value': 'have.value',
+    'have.css': 'have.css'
 }
 const CypressMenu = () => {
     const [selectType, _setSelectType] = useState<any>(null);
@@ -109,11 +118,24 @@ const CypressMenu = () => {
     const onTypeChange = (e) => {
         setSelectType(e.value);
         let value = ""
-        if(e.value === "text")
-            value = document.querySelector(cySelector).textContent;
-        if(e.value === "css")
+        if(e.value === "have.value"){
+            if(document.querySelector(cySelector).value){
+                value = document.querySelector(cySelector).value;
+                generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}")`);
+            }
+        }
+        else if(e.value === "have.css"){
             value = '"color"',  + window.getComputedStyle(document.querySelector(cySelector)).color;
-        generateCode(`cy.get(${cySelector}).should("${assertions[e.value]}", "${value}")`);
+            generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}")`);
+        }else if(e.value === "have.length"){
+            if(document.querySelector(cySelector).value){
+                value = document.querySelector(cySelector).value.length;
+                generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}")`);
+            }
+        }
+        else{
+            generateCode(`cy.get(${cySelector}).should("${e.value}")`);
+        }
     }
     const cancelEventPropagation = (e) => {
         e.nativeEvent.stopImmediatePropagation();
