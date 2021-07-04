@@ -22,6 +22,7 @@ const assertions = {
 }
 const CypressMenu = () => {
     const [selectType, _setSelectType] = useState<any>(null);
+    const [cySelector, setScySelector] = useState<any>('');
     const [menu, setMenu] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
     const typeRef = React.useRef(selectType);
@@ -34,6 +35,7 @@ const CypressMenu = () => {
     useEffect(() => {
 
         document.addEventListener('click', (event) => {
+            setScySelector(useSelector(event).cySelector);
             displayMenu(event);
         }, false)
 
@@ -57,11 +59,11 @@ const CypressMenu = () => {
     const displayMenu = (e) => {
         if (document.querySelector('.menu-container').classList.contains('hide-menu')) {
             setMenu(true);
-            document.querySelector(useSelector(e).cySelector).classList.remove('hoverBorder');
+            document.querySelector(cySelector).classList.remove('hoverBorder');
             document.querySelectorAll('.clickedBorder').forEach(elem => {
                 elem.classList.remove('clickedBorder');
             });
-            document.querySelector(useSelector(e).cySelector).classList.add('clickedBorder');
+            document.querySelector(cySelector).classList.add('clickedBorder');
         } else {
 
             if(e.target.classList.contains("show-menu")
@@ -97,30 +99,27 @@ const CypressMenu = () => {
     }
 
     const onClickChange = (e) => {
-        let cySelector = useSelector(e).cySelector;
         setSelectType('click')
         generateCode(`cy.get("${cySelector}").click()`);
     }
     const onType = e => {
-        let cySelector = useSelector(e).cySelector;
         setSelectType('type');
         generateCode(`cypress.get("${cySelector}").type("{1}")`);
     }
     const onTypeChange = (e) => {
         setSelectType(e.value);
-        let cySelector = useSelector(e).cySelector;
         let value = ""
         if(e.value === "text")
             value = document.querySelector(cySelector).textContent;
         if(e.value === "css")
-            value = 'color, ' +window.getComputedStyle(document.querySelector(cySelector)).color;
+            value = '"color"',  + window.getComputedStyle(document.querySelector(cySelector)).color;
         generateCode(`cy.get(${cySelector}).should("${assertions[e.value]}", "${value}")`);
     }
     const cancelEventPropagation = (e) => {
         e.nativeEvent.stopImmediatePropagation();
     }
     return <div className={`menu-container ${menu ? 'show-menu' : 'hide-menu'}`}>
-        <TabView className={'menu-click'} activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
+        <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
             <TabPanel header="Actions" >
                 <Button label="Click" onClick={(e) => onClickChange(e)} />
                 <Button label="Type" onClick={e=>onType(e)}/>
