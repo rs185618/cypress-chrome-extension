@@ -63,8 +63,13 @@ const CypressMenu = () => {
             });
             document.querySelector(useSelector(e).cySelector).classList.add('clickedBorder');
         } else {
-           // if(e.target.classList.contains("show-menu") || e.target.classList.contains("p-dropdown-label") || e.target.classList.contains("p-clickable")) {
-            if(e.target.target.getAttribute('menu-click')){
+
+            if(e.target.classList.contains("show-menu")
+                || e.target.classList.contains("p-tabview-nav-link")
+                || e.target.classList.contains("p-tabview-title")
+                || e.target.classList.contains("p-button")
+                || e.target.classList.contains("p-dropdown-label")
+                || e.target.classList.contains("p-clickable")) {
                 return;
             }
             setMenu(false);
@@ -92,35 +97,36 @@ const CypressMenu = () => {
     }
 
     const onClickChange = (e) => {
+        let cySelector = useSelector(e).cySelector;
         setSelectType('click')
-        // setMenu(false)
-        // e.preventDefault()
-        // e.stopPropagation()
-        generateCode('cypress.get("{0}").click()');
+        generateCode(`cy.get("${cySelector}").click()`);
     }
     const onType = e => {
+        let cySelector = useSelector(e).cySelector;
         setSelectType('type');
-        generateCode(`cypress.get("{0}").type("{1}")`);
+        generateCode(`cypress.get("${cySelector}").type("{1}")`);
     }
     const onTypeChange = (e) => {
         setSelectType(e.value);
-        generateCode(`cypress.get("{0}").should("${assertions[e.value]}", "")`);
+        let cySelector = useSelector(e).cySelector;
+        let value = ""
+        if(e.value === "text")
+            value = document.querySelector(cySelector).textContent;
+        if(e.value === "css")
+            value = 'color, ' +window.getComputedStyle(document.querySelector(cySelector)).color;
+        generateCode(`cy.get(${cySelector}).should("${assertions[e.value]}", "${value}")`);
     }
     const cancelEventPropagation = (e) => {
         e.nativeEvent.stopImmediatePropagation();
     }
-
-    console.log(selectType)
-    console.log(typeRef)
     return <div className={`menu-container ${menu ? 'show-menu' : 'hide-menu'}`}>
-
         <TabView className={'menu-click'} activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
-            <TabPanel header="Actions" data-menu={true}>
+            <TabPanel header="Actions" >
                 <Button label="Click" onClick={(e) => onClickChange(e)} />
                 <Button label="Type" onClick={e=>onType(e)}/>
             </TabPanel>
-            <TabPanel header="Assertions" data-menu={true}>
-                <Dropdown value={selectType} options={types} data-menu={true} onChange={onTypeChange} placeholder="Should..." onMouseDown={cancelEventPropagation} data-type="assert-selector" />
+            <TabPanel header="Assertions" >
+                <Dropdown value={selectType} options={types} onChange={onTypeChange} placeholder="Should..." onMouseDown={cancelEventPropagation} data-type="assert-selector" />
             </TabPanel>
         </TabView>
 

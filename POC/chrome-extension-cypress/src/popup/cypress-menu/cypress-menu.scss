@@ -3,7 +3,7 @@
 @import '../../../node_modules/primeicons/primeicons.css';
 
 $primary-color: #f7af80;
-$background-color: #9199a5;
+$background-color: rgba(100, 100, 100, .7);
 
 .menu-container {
   padding: 15px;
@@ -27,8 +27,16 @@ $background-color: #9199a5;
     background-color: $background-color;
     padding: 15px;
     min-height: 300px;
+    border-radius: 0 0 15px 15px;
+    .p-button{
+      border-radius: 10px;
+    }
   }
-
+  .p-tabview-nav li {
+    .p-tabview-nav-link {
+      margin: 0 5px 5px 0;
+    }
+  }
 }
 .p-dropdown-panel {
   z-index: 9999999999999999999 !important;
