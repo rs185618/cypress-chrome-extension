@@ -9,7 +9,6 @@ import {useSelector} from "../../selectorPicker";
 import "./cypress-menu.scss";
 const types = [{label: 'Text', value: 'text'}, {label: 'Css', value: 'css'}]
 const CypressMenu = () => {
-    console.log("hello")
     const [selectType, _setSelectType] = useState<any>(null);
     const [currentEvent, setCurrentEvent] = useState(null);
     const typeRef = React.useRef(selectType);
@@ -30,7 +29,7 @@ const CypressMenu = () => {
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 setCurrentEvent(e);
-                generateCode(e)
+                generateCode(e);
             }
         }, true);
         document.addEventListener('change', (e) => {
@@ -66,7 +65,7 @@ const CypressMenu = () => {
     const generateCode = (event) => {
         let generatedCode;
         chrome.storage.local.get(/* String or Array */["selector", "generatedCode"], (items) => {
-            console.log(items);
+            //console.log(items);
             if (items?.generatedCode) {
                 generatedCode = items['generatedCode']
             }
@@ -74,11 +73,12 @@ const CypressMenu = () => {
             chrome.storage.local.set({ "selector": clickedSelector, "generatedCode": `${generatedCode ? generatedCode + '\n' : ''}cypress.get('${clickedSelector}').click()` }, function(){
                 //  Data's been saved boys and girls, go on home
             });
-            console.log(clickedSelector);
+            //console.log(clickedSelector);
             setSelectType(null);
 
         });
     }
+
 
     const onClickChange = () => {
         setSelectType('click')

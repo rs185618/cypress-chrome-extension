@@ -22,6 +22,7 @@ export const RecordButtons: FC<any>  = ({...props}) => {
 
 
 
+
     return <div className={'record-buttons-container'}>
         <Button label={`${recordValue ? 'Stop' : 'Start'} Record`} onClick={record} />
         <Button label="Clear" onClick={props.onClearTextArea} />

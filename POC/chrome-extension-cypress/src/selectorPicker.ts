@@ -24,9 +24,11 @@ export const useSelector = (event) => {
     const firstSelector = firstTag ? `[${selector}='${firstTag}']` : 'BODY';
     const cySelector = `${firstSelector} ${parent.tags.split(' ').reverse().join(' ')}`
     const innerText = document.querySelector(cySelector).textContent;
-    const color = window.getComputedStyle(document.querySelector(cySelector)).color
-    console.log(`cy.get('${cySelector}').contains('have.text', '${innerText}')`);
-    console.log(`cy.get('${cySelector}').contains('have.css', 'color, '${color}')`);
+    const color = window.getComputedStyle(document.querySelector(cySelector)).color;
+
+
+    // console.log(`cy.get('${cySelector}').contains('have.text', '${innerText}')`);
+    // console.log(`cy.get('${cySelector}').contains('have.css', 'color, '${color}')`);
     return {
         cySelector
     }

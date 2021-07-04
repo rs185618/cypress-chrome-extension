@@ -10,17 +10,30 @@
         "default_icon": "icon16.png",
         "default_popup": "popup.html"
     },
-
     "background": {
         "service_worker": "eventPage.js"
     },
+
     "content_scripts": [
         {
             "matches": ["*://*/*"],
             "js": ["content.js"],
             "run_at": "document_end"
+        },
+        {
+            "matches": ["*://*/*"],
+            "js": ["response.js"],
+            "run_at": "document_end"
         }
     ],
+    "web_accessible_resources": [{
+        "resources": ["chrome-extension://dnheaedbmnklhpjdmkmfeaehkcgfgphe/test.js"],
+        "matches": [],
+        "extension_ids": []
+    }],
+    "content_security_policy": {
+        "extension_pages": "default-src test.js"
+    },
     "icons": {
         "16": "icon16.png",
         "48": "icon48.png",
