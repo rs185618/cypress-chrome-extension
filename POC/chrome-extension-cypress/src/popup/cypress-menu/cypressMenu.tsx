@@ -81,7 +81,8 @@ const CypressMenu = () => {
                 generatedCode = items['generatedCode']
             }
             const clickedSelector = items['selector'];
-            chrome.storage.local.set({ "selector": clickedSelector, "generatedCode": `${generatedCode ? generatedCode + '\n' : ''}${template.replace('{0}', clickedSelector)}` }, function(){
+            chrome.storage.local.set({ "selector": clickedSelector, "generatedCode": `$${template.replace('{0}', clickedSelector.cySelector).replace('{1}',clickedSelector.value)}` }
+              , function(){
                 //  Data's been saved boys and girls, go on home
             });
             console.log(clickedSelector);
@@ -94,6 +95,10 @@ const CypressMenu = () => {
         // e.preventDefault()
         // e.stopPropagation()
         generateCode('cypress.get("{0}").click()');
+    }
+    const onType = e => {
+        setSelectType('type');
+        generateCode(`cypress.get("{0}").type("{1}")`);
     }
     const onTypeChange = (e) => {
         setSelectType(e.value);
@@ -110,6 +115,7 @@ const CypressMenu = () => {
         <TabView className={'menu-click'} activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
             <TabPanel header="Actions" data-menu={true}>
                 <Button label="Click" onClick={(e) => onClickChange(e)} />
+                <Button label="Type" onClick={e=>onType(e)}/>
             </TabPanel>
             <TabPanel header="Assertions" data-menu={true}>
                 <Dropdown value={selectType} options={types} data-menu={true} onChange={onTypeChange} placeholder="Should..." onMouseDown={cancelEventPropagation} data-type="assert-selector" />

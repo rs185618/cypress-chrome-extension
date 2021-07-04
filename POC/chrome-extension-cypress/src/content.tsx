@@ -11,7 +11,7 @@ const renderCypressMenu = () => {
         const section = document.getElementById(id);
         chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
             if (items && items['recorder'] == 'start') {
-                const clickedSelector = useSelector(e).cySelector;
+                const clickedSelector = useSelector(e);
                 console.log(items);
                 chrome.storage.local.set({"selector": clickedSelector}, function() {
                     if (items && !section && clickedSelector) {
