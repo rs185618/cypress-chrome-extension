@@ -99,7 +99,9 @@ const CypressMenu = () => {
             const clickedSelector = items['selector'];
             chrome.storage.local.set(
               { "selector": clickedSelector, "generatedCode":
-                    `${generatedCode ? generatedCode + '\n' : ''}${template.replace('{0}', clickedSelector.cySelector).replace('{1}',clickedSelector.value)}` },
+                    `${generatedCode ? generatedCode + '\n' : ''}${template.replace('{0}', clickedSelector.cySelector).
+                    replace('{1}',clickedSelector.value)
+                      .replace('{2}',clickedSelector.text)}` },
               function(){
                   //  Data's been saved boys and girls, go on home
               });
@@ -111,9 +113,13 @@ const CypressMenu = () => {
         setSelectType('click')
         generateCode(`cy.get("${cySelector}").click()`);
     }
-    const onType = e => {
+    const onType = () => {
         setSelectType('type');
         generateCode(`cypress.get("${cySelector}").type("{1}")`);
+    }
+    const onContains = () =>{
+        setSelectType('contains');
+        generateCode(`cypress.get("${cySelector}").contains("{2}")`);
     }
     const onTypeChange = (e) => {
         setSelectType(e.value);
@@ -144,7 +150,8 @@ const CypressMenu = () => {
         <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
             <TabPanel header="Actions" >
                 <Button label="Click" onClick={(e) => onClickChange(e)} />
-                <Button label="Type" onClick={e=>onType(e)}/>
+                <Button label="Type" onClick={e=>onType()}/>
+                <Button label="Contains" onClick={e=>onContains()}/>
             </TabPanel>
             <TabPanel header="Assertions" >
                 <Dropdown value={selectType} options={types} onChange={onTypeChange} placeholder="Should..." onMouseDown={cancelEventPropagation} data-type="assert-selector" />

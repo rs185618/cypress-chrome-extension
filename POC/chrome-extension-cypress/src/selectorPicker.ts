@@ -29,7 +29,8 @@ export const useSelector = (event) => {
     console.log(`cy.get('${cySelector}').contains('have.css', 'color, '${color}')`);
     return {
         cySelector,
-        value:event?.target?.value
+        value:event?.target?.value,
+        text: innerText
     }
 };
 
