@@ -6,6 +6,8 @@ import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import {useSelector} from "../../selectorPicker";
 import "./cypress-menu.scss";
+import {TabPanel, TabView} from "primereact/tabview";
+import { CodeArea } from '../components/code-area/code-area';
 const id = 'cypress-menu-assistant';
 
 const types = [
@@ -21,6 +23,7 @@ const assertions = {
 const CypressMenu = () => {
     const [selectType, _setSelectType] = useState<any>(null);
     const [menu, setMenu] = useState(false);
+    const [activeIndex, setActiveIndex] = useState(0);
     const typeRef = React.useRef(selectType);
 
     const setSelectType = data => {
@@ -60,7 +63,8 @@ const CypressMenu = () => {
             });
             document.querySelector(useSelector(e).cySelector).classList.add('clickedBorder');
         } else {
-            if(e.target.classList.contains("show-menu") || e.target.classList.contains("p-dropdown-label") || e.target.classList.contains("p-clickable")) {
+           // if(e.target.classList.contains("show-menu") || e.target.classList.contains("p-dropdown-label") || e.target.classList.contains("p-clickable")) {
+            if(e.target.target.getAttribute('menu-click')){
                 return;
             }
             setMenu(false);
@@ -103,8 +107,14 @@ const CypressMenu = () => {
     console.log(typeRef)
     return <div className={`menu-container ${menu ? 'show-menu' : 'hide-menu'}`}>
 
-        <Button label="Click" onClick={(e) => onClickChange(e)} />
-        <Dropdown value={selectType} options={types} onChange={onTypeChange} placeholder="Should..." onMouseDown={cancelEventPropagation} data-type="assert-selector" />
+        <TabView className={'menu-click'} activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
+            <TabPanel header="Actions" data-menu={true}>
+                <Button label="Click" onClick={(e) => onClickChange(e)} />
+            </TabPanel>
+            <TabPanel header="Assertions" data-menu={true}>
+                <Dropdown value={selectType} options={types} data-menu={true} onChange={onTypeChange} placeholder="Should..." onMouseDown={cancelEventPropagation} data-type="assert-selector" />
+            </TabPanel>
+        </TabView>
 
     </div>
 }

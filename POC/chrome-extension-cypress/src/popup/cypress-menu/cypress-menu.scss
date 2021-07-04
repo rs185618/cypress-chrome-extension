@@ -2,17 +2,34 @@
 @import '../../../node_modules/primereact/resources/primereact.min.css';
 @import '../../../node_modules/primeicons/primeicons.css';
 
+$primary-color: #f7af80;
+$background-color: #9199a5;
+
 .menu-container {
-  width: 200px;
-  height: 400px;
-  background: red;
-  color: white;
+  padding: 15px;
+  width: 360px;
+  height: 500px;
+  background-color: transparent;
+  color: $primary-color;
+  font-size: 20px;
   position: fixed;
-  right: 0;
-  top: 0;
+  right: 10px;
+  top: 10px;
   z-index: 999999999999999999;
 }
+.p-tabview {
+  .p-tabview-nav {
+    background-color: $background-color;
+    margin: 15px 0;
+    padding: 15px;
+  }
+  .p-tabview-panels {
+    background-color: $background-color;
+    padding: 15px;
+    min-height: 300px;
+  }
 
+}
 .p-dropdown-panel {
   z-index: 9999999999999999999 !important;
 }
