@@ -139,7 +139,7 @@ const CypressMenu = () => {
             default:
                 generateCode(`cy.get(${cySelector}).should("${e.value}");`);
         }
-        toggleView && toggleView(e);
+        toggleView && toggleView();
     }
     const onContainerClick = (e) => {
         e.nativeEvent.stopImmediatePropagation();
