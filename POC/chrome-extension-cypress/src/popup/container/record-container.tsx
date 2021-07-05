@@ -2,7 +2,7 @@ import React, {FC, useEffect, useState} from 'react';
 import {RecordButtons} from "../components/record-buttons/record-buttons";
 import {CodeArea} from "../components/code-area/code-area";
 import './record-container.scss'
-export const RecordContainer: FC<any>  = ({}) => {
+export const RecordContainer: FC<any>  = ({...props}) => {
     const [codeArea, setCodeArea] = useState('');
 
     useEffect(() => {
@@ -30,7 +30,7 @@ export const RecordContainer: FC<any>  = ({}) => {
     }
 
     return <div className={'record-container'}>
-        <RecordButtons onClearTextArea={clearCode}/>
+        <RecordButtons onClearTextArea={clearCode} hidePopup={props.hidePopup}/>
         <CodeArea codeAreaValue={codeArea} setCodeAreaValue={(value) => updateCode(value)}/>
     </div>
 }

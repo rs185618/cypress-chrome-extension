@@ -44,7 +44,14 @@ const CypressMenu = () => {
     useEffect(() => {
 
         document.addEventListener('click', (e) => {
-            setCySelector(useSelector(e).cySelector);
+            chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
+                if (items && items['recorder'] === 'start') {
+                    const clickedSelector = useSelector(e).cySelector;
+                    chrome.storage.local.set({"selector": clickedSelector}, function() {
+                        setCySelector(useSelector(e).cySelector);
+                    });
+                }
+            });
         }, false)
 
         document.addEventListener('mouseover', (e) => {
