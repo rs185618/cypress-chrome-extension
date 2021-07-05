@@ -1,26 +1,26 @@
-import React from 'react';
-import {renderMenu} from "./popup/cypress-menu/cypressMenu";
+import React from "react";
+import * as ReactDOM from "react-dom";
+import CypressMenu from "./popup/cypress-menu/cypressMenu";
 import {useSelector} from "./selectorPicker";
 const id = 'cypress-menu-assistant';
 let capture = true;
 
 const renderCypressMenu = () => {
-
-
     const getSelectorAndShowMenu = (e) => {
-        const section = document.getElementById(id);
+
         chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
             if (items && items['recorder'] == 'start') {
                 const clickedSelector = useSelector(e);
                 console.log(items);
+
                 chrome.storage.local.set({"selector": clickedSelector}, function() {
+                    const section = document.getElementById(id);
+                    console.log("section", section);
                     if (items && !section && clickedSelector) {
-                        renderMenu()
+                        ReactDOM.render(<CypressMenu />, document.createDocumentFragment()) ;
                     }
                 });
-
             }
-
         });
     }
 
@@ -39,15 +39,10 @@ const renderCypressMenu = () => {
         } else {
             getSelectorAndShowMenu(e);
         }
-    }, true)
-
-
+    }, true);
     document.addEventListener('change', (e) => {
         getSelectorAndShowMenu(e);
     }, false);
-
-
-
 }
 
 renderCypressMenu();

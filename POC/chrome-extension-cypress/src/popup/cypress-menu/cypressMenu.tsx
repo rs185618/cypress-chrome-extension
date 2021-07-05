@@ -21,7 +21,6 @@ const types = [
     {label: 'Be Disabled', value: 'be.disabled'},
     {label: 'Not Be Disabled', value: 'not.be.disabled'},
     {label: 'Have length', value: 'have.length'},
-
     {label: 'Css', value: 'have.css'}];
 
 // TODO add dropdown for css
@@ -36,6 +35,7 @@ const CypressMenu = () => {
     const [cySelector, setScySelector] = useState<any>('');
     const [menu, setMenu] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
+    const [selectedStyle, setSelectedStyle] = useState('');
     const typeRef = React.useRef(selectType);
 
     const setSelectType = data => {
@@ -70,24 +70,17 @@ const CypressMenu = () => {
     const displayMenu = (e) => {
         if (document.querySelector('.menu-container').classList.contains('hide-menu')) {
             setMenu(true);
-            document.querySelector(cySelector).classList.remove('hoverBorder');
             document.querySelectorAll('.clickedBorder').forEach(elem => {
                 elem.classList.remove('clickedBorder');
             });
-            document.querySelector(cySelector).classList.add('clickedBorder');
-        } else {
-
-            if (e.target.classList.contains("show-menu")
-                || e.target.classList.contains("p-tabview-nav-link")
-                || e.target.classList.contains("p-tabview-title")
-                || e.target.classList.contains("p-button")
-                || e.target.classList.contains("p-dropdown-label")
-                || e.target.classList.contains("p-clickable")) {
-                return;
+            if(cySelector){
+                document.querySelector(cySelector).classList.remove('hoverBorder');
+                document.querySelector(cySelector).classList.add('clickedBorder');
             }
+
+        } else {
             setMenu(false);
         }
-
     }
 
 
@@ -114,14 +107,17 @@ const CypressMenu = () => {
     const onClickChange = (e) => {
         setSelectType('click')
         generateCode(`cy.get("${cySelector}").click();`);
+        displayMenu(e);
     }
-    const onType = () => {
+    const onType = (e) => {
         setSelectType('type');
         generateCode(`cy.get("${cySelector}").type("{1}");`);
+        displayMenu(e);
     }
-    const onContains = () =>{
+    const onContains = (e) =>{
         setSelectType('contains');
         generateCode(`cy.get("${cySelector}").contains("{2}")`);
+        displayMenu(e);
     }
     const onTypeChange = (e) => {
         setSelectType(e.value);
@@ -140,6 +136,7 @@ const CypressMenu = () => {
             console.log(computedStyleOptions);
             value = '"color"', +window.getComputedStyle(document.querySelector(cySelector)).color;
             generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}");`);
+            return;
         } else if (e.value === "have.length") {
             if (document.querySelector(cySelector).value) {
                 value = document.querySelector(cySelector).value.length;
@@ -148,30 +145,34 @@ const CypressMenu = () => {
         } else {
             generateCode(`cy.get(${cySelector}).should("${e.value}");`);
         }
+        displayMenu(e);
     }
-    const cancelEventPropagation = (e) => {
+    const onContainerClick = (e) => {
         e.nativeEvent.stopImmediatePropagation();
+        displayMenu(e);
     }
-    return <div className={`menu-container ${menu ? 'show-menu' : 'hide-menu'}`}>
-        <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
-            <TabPanel header="Actions">
-                <Button label="Click" onClick={(e) => onClickChange(e)}/>
-                <Button label="Type" onClick={e => onType()}/>
-                <Button label="Contains" onClick={e=>onContains()}/>
-            </TabPanel>
-            <TabPanel header="Assertions">
-                <Dropdown value={selectType} options={types} onChange={onTypeChange} placeholder="Should..."
-                          onMouseDown={cancelEventPropagation} data-type="assert-selector"/>
-            </TabPanel>
-        </TabView>
 
-    </div>
+    const onComputedStyleChange = (e) => {
+        setSelectedStyle(e.value);
+    }
+    return ReactDOM.createPortal(<section id={id}>
+        <div className={`menu-container ${menu ? 'show-menu' : 'hide-menu'}`} onClick={onContainerClick}>
+            <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
+                <TabPanel header="Actions">
+                    <Button label="Click" onClick={(e) => onClickChange(e)}/>
+                    <Button label="Type" onClick={e => onType(e)}/>
+                    <Button label="Contains" onClick={e=>onContains(e)}/>
+                </TabPanel>
+                <TabPanel header="Assertions">
+                    <Dropdown value={selectType} options={types} onChange={onTypeChange} placeholder="Should..." data-type="assert-selector"/>
+                    {
+                        selectType === "have.css" ?
+                            <Dropdown value={selectedStyle} options={computedStyle} onChange={onComputedStyleChange} placeholder="Select style..."/> : ""
+                    }
+                </TabPanel>
+            </TabView>
+        </div>
+    </section>, document.body);
 }
 
-export const renderMenu = () => {
-    const el = document.createElement('section');
-    el.setAttribute('id', id);
-    document.body.appendChild(el);
-
-    return ReactDOM.render(<CypressMenu/>, document.getElementById(id));
-}
+export default  CypressMenu;
