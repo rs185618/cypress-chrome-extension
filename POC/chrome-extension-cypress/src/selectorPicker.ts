@@ -16,7 +16,7 @@ const getClosestParent = (elem, selector = '[id]') => {
     return null
 };
 
-export const useSelector = (event) => {
+export const useSelector = (event?) => {
     const selector = 'data-testid';
     const parent = getClosestParent(event.target, `[${selector}]`);
     const firstTag = parent.elem.getAttribute([selector]);

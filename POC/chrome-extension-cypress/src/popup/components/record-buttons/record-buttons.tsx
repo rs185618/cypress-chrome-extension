@@ -10,11 +10,15 @@ export const RecordButtons: FC<any>  = ({...props}) => {
         });
     }, [])
     useEffect(() => {
-        if (recordValue === 'start') { // stop
+            chrome.storage.local.get(/* String or Array */["popup"], (items) => {
+                if (recordValue === 'start' && items && items['popup']) {
+                    chrome.storage.local.set({ "popup": false } , function() {
+                        debugger
+                        window.close()
+                    })
+                }
+            });
 
-        } else { // start
-
-        }
         // return () => {
         //     chrome.storage.local.set({ "recorder": 'stop' });
         // }
@@ -22,10 +26,14 @@ export const RecordButtons: FC<any>  = ({...props}) => {
 
     const record = () => {
         chrome.storage.local.set({ "recorder": `${recordValue == 'stop' ?  'start': 'stop'}` }, function(){
-            setRecordValue(`${recordValue == 'stop' ?  'start': 'stop'}`)
-            chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
-                console.log(items);
-            });
+            chrome.storage.local.set({ "popup": `${ (recordValue === 'start')}` } , function() {
+
+                chrome.tabs.query({active: true}, function(tabs) {
+                    chrome.tabs.sendMessage(tabs[0].id,{ menu: 'started' });
+
+                })
+                setRecordValue(`${recordValue == 'stop' ?  'start': 'stop'}`)
+            })
         });
     }
 
