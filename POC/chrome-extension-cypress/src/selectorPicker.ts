@@ -25,7 +25,7 @@ export const useSelector = (event) => {
     return {
         cySelector,
         value:event?.target?.value,
-        text: event?.target?.innerText
+        text: event?.target?.innerText || event?.target?.value
     }
 };
 

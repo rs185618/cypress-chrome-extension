@@ -123,18 +123,13 @@ const CypressMenu = () => {
         setSelectType(e.value);
         let value = ""
         if (e.value === "have.value") {
-            if (document.querySelector(cySelector).value) {
-                value = document.querySelector(cySelector).value;
+            if (useSelector(e.target).value) {
+                value = useSelector(e.target).value;
                 generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}");`);
             }
         } else if (e.value === "have.css") {
             let computedStyle = Object.keys(window.getComputedStyle(document.querySelector(cySelector)));
-            console.log('computedStyle', computedStyle)
-            let computedStyleOptions = computedStyle.forEach(attr => {
-                attr : computedStyle[attr]
-            });
-            console.log(computedStyleOptions);
-            value = '"color"', +window.getComputedStyle(document.querySelector(cySelector)).color;
+            value = '"color", ' +window.getComputedStyle(document.querySelector(cySelector)).color;
             generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}");`);
             return;
         } else if (e.value === "have.length") {
