@@ -1,2 +1,4 @@
 dist/js
+dist/*.js
+dist/*.svg
 node_modules
