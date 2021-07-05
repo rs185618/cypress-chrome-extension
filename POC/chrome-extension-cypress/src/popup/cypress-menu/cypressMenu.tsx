@@ -57,7 +57,6 @@ const CypressMenu = () => {
                 document.querySelector(useSelector(e).cySelector).classList.remove('hoverBorder')
             }
         })
-        // return () => document.removeEventListener('click', displayMenu)
     }, [])
 
     useEffect(() => {
@@ -81,8 +80,7 @@ const CypressMenu = () => {
 
     const generateCode = (template) => {
         let generatedCode;
-        chrome.storage.local.get(/* String or Array */["selector", "generatedCode"], (items) => {
-            console.log(items);
+        chrome.storage.local.get(["selector", "generatedCode"], (items) => {
             if (items?.generatedCode) {
                 generatedCode = items['generatedCode']
             }
@@ -96,7 +94,6 @@ const CypressMenu = () => {
                 function () {
                     //  Data's been saved boys and girls, go on home
                 });
-            console.log(clickedSelector);
         });
     }
 

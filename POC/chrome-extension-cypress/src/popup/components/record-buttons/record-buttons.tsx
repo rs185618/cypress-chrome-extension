@@ -5,7 +5,6 @@ export const RecordButtons: FC<any>  = ({...props}) => {
 
     useEffect(() => {
         chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
-            console.log(items);
             if (items && items['recorder']) setRecordValue(items['recorder'])
         });
     }, [])
@@ -15,16 +14,12 @@ export const RecordButtons: FC<any>  = ({...props}) => {
         } else { // start
 
         }
-        // return () => {
-        //     chrome.storage.local.set({ "recorder": 'stop' });
-        // }
     }, [recordValue])
 
     const record = () => {
         chrome.storage.local.set({ "recorder": `${recordValue == 'stop' ?  'start': 'stop'}` }, function(){
             setRecordValue(`${recordValue == 'stop' ?  'start': 'stop'}`)
             chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
-                console.log(items);
             });
         });
     }
