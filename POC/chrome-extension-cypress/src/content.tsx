@@ -11,11 +11,8 @@ const renderCypressMenu = () => {
         chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
             if (items && items['recorder'] == 'start') {
                 const clickedSelector = useSelector(e);
-                console.log(items);
-
                 chrome.storage.local.set({"selector": clickedSelector}, function() {
                     const section = document.getElementById(id);
-                    console.log("section", section);
                     if (items && !section && clickedSelector) {
                         ReactDOM.render(<CypressMenu />, document.createDocumentFragment()) ;
                     }

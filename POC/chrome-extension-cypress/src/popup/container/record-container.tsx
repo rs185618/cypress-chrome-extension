@@ -7,7 +7,6 @@ export const RecordContainer: FC<any>  = ({}) => {
 
     useEffect(() => {
         chrome.storage.local.get(/* String or Array */["selector", "generatedCode"], (items) => {
-            console.log(items);
             if (items['generatedCode']) {
                 setCodeArea(items['generatedCode'])
             }
