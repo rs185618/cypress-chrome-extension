@@ -12,7 +12,6 @@ export const RecordButtons: FC<any>  = ({...props}) => {
             chrome.storage.local.get(/* String or Array */["popup"], (items) => {
                 if (recordValue === 'start' && items && items['popup']) {
                     chrome.storage.local.set({ "popup": false } , function() {
-                        debugger
                         window.close()
                     })
                 }

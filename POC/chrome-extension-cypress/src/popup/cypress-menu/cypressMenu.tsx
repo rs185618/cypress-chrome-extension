@@ -46,7 +46,6 @@ const CypressMenu = () => {
 
         document.addEventListener('click', (e) => {
             chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
-                console.log(items);
                 if (items && items['recorder'] === 'start') {
                     const clickedSelector = useSelector(e).cySelector;
                     chrome.storage.local.set({"selector": clickedSelector}, function() {
@@ -57,7 +56,6 @@ const CypressMenu = () => {
         }, false)
 
         document.addEventListener('mouseover', (e) => {
-            debugger
             if (document.querySelector('.menu-container').classList.contains('hide-menu')) {
                 document.querySelector(useSelector(e).cySelector).classList.add('hoverBorder')
             }
