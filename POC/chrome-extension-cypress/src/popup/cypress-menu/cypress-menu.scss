@@ -50,8 +50,9 @@ $background-color: rgba(100, 100, 100, .7);
   display: none;
 }
 .hoverBorder{
-  border: 1px solid blue;
+  border: 2px solid blue;
 }
 .clickedBorder{
-  border: 1px solid red;
+  border: 2px solid red;
+  border-radius: 5px;
 }

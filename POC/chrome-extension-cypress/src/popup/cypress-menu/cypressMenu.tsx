@@ -1,4 +1,3 @@
-
 import React, {useEffect, useState} from 'react';
 import './cypress-menu.scss';
 import * as ReactDOM from "react-dom";
@@ -32,7 +31,7 @@ const computedStyle = [
 ];
 const CypressMenu = () => {
     const [selectType, _setSelectType] = useState<any>(null);
-    const [cySelector, setScySelector] = useState<any>('');
+    const [cySelector, setCySelector] = useState<any>('');
     const [menu, setMenu] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
     const [selectedStyle, setSelectedStyle] = useState('');
@@ -45,9 +44,8 @@ const CypressMenu = () => {
 
     useEffect(() => {
 
-        document.addEventListener('click', (event) => {
-            setScySelector(useSelector(event).cySelector);
-            displayMenu(event);
+        document.addEventListener('click', (e) => {
+            setCySelector(useSelector(e).cySelector);
         }, false)
 
         document.addEventListener('mouseover', (e) => {
@@ -64,17 +62,21 @@ const CypressMenu = () => {
     }, [])
 
     useEffect(() => {
-        console.log(selectType);
-    }, [selectType])
+        displayMenu();
+    }, [cySelector])
 
-    const displayMenu = (e) => {
+    const displayMenu = () => {
         if (document.querySelector('.menu-container').classList.contains('hide-menu')) {
-            setMenu(true);
-            document.querySelectorAll('.clickedBorder').forEach(elem => {
+
+            /*document.querySelectorAll('.clickedBorder').forEach(elem => {
                 elem.classList.remove('clickedBorder');
-            });
-            if(cySelector){
-                document.querySelector(cySelector).classList.remove('hoverBorder');
+            });*/
+            if (cySelector) {
+                setMenu(true);
+                if (document.querySelector('.clickedBorder')) {
+                    document.querySelector('.clickedBorder').classList.remove('clickedBorder');
+                    document.querySelector('.hoverBorder').classList.remove('hoverBorder');
+                }
                 document.querySelector(cySelector).classList.add('clickedBorder');
             }
 
@@ -93,82 +95,78 @@ const CypressMenu = () => {
             }
             const clickedSelector = items['selector'];
             chrome.storage.local.set(
-              { "selector": clickedSelector, "generatedCode":
-                    `${generatedCode ? generatedCode + '\n' : ''}${template.replace('{0}', clickedSelector.cySelector).
-                    replace('{1}',clickedSelector.value)
-                      .replace('{2}',clickedSelector.text)}` },
-              function(){
-                  //  Data's been saved boys and girls, go on home
-              });
+                {
+                    "selector": clickedSelector, "generatedCode":
+                        `${generatedCode ? generatedCode + '\n' : ''}${template.replace('{0}', clickedSelector.cySelector).replace('{1}', clickedSelector.value)
+                            .replace('{2}', clickedSelector.text)}`
+                },
+                function () {
+                    //  Data's been saved boys and girls, go on home
+                });
             console.log(clickedSelector);
         });
     }
 
-    const onClickChange = (e) => {
+    const onClickChange = () => {
         setSelectType('click')
         generateCode(`cy.get("${cySelector}").click();`);
-        displayMenu(e);
+        displayMenu();
     }
-    const onType = (e) => {
+    const onType = () => {
         setSelectType('type');
         generateCode(`cy.get("${cySelector}").type("{1}");`);
-        displayMenu(e);
+        displayMenu();
     }
-    const onContains = (e) =>{
+    const onContains = () => {
         setSelectType('contains');
         generateCode(`cy.get("${cySelector}").contains("{2}")`);
-        displayMenu(e);
+        displayMenu();
     }
     const onTypeChange = (e) => {
         setSelectType(e.value);
-        let value = "";
-        let toggleView = displayMenu;
-
-        switch (e.value){
-            case "have.value":
-                if (useSelector(e.target).value) {
-                    value = useSelector(e.target).value;
-                    generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}");`);
-                }
-                break;
-            case "have.css":
-                toggleView = null;
-                break;
-            case "have.length":
-                if (document.querySelector(cySelector).value) {
-                    value = document.querySelector(cySelector).value.length;
-                    generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}");`);
-                }
-                break;
-            default:
-                generateCode(`cy.get(${cySelector}).should("${e.value}");`);
+        let value = ""
+        if (e.value === "have.value") {
+            if (useSelector(e.target).value) {
+                value = useSelector(e.target).value;
+                generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}");`);
+            }
+        } else if (e.value === "have.css") {
+            value = '"color", ' + window.getComputedStyle(document.querySelector(cySelector)).color;
+            generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}");`);
+            return;
+        } else if (e.value === "have.length") {
+            if (document.querySelector(cySelector).value) {
+                value = document.querySelector(cySelector).value.length;
+                generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}");`);
+            }
+        } else {
+            generateCode(`cy.get(${cySelector}).should("${e.value}");`);
         }
-        toggleView && toggleView(e);
+        displayMenu();
     }
     const onContainerClick = (e) => {
         e.nativeEvent.stopImmediatePropagation();
+        displayMenu();
     }
 
     const onComputedStyleChange = (e) => {
-        const val = e.value
-        setSelectedStyle(val);
-        const value = window.getComputedStyle(document.querySelector(cySelector))[val];
-        generateCode(`cy.get(${cySelector}).should("${selectType}", "${e.value}", "${value}");`);
-        displayMenu(e);
+        setSelectedStyle(e.value);
     }
     return ReactDOM.createPortal(<section id={id}>
         <div className={`menu-container ${menu ? 'show-menu' : 'hide-menu'}`} onClick={onContainerClick}>
             <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
                 <TabPanel header="Actions">
-                    <Button label="Click" onClick={(e) => onClickChange(e)}/>
-                    <Button label="Type" onClick={e => onType(e)}/>
-                    <Button label="Contains" onClick={e=>onContains(e)}/>
+                    <Button label="Click" onClick={() => onClickChange()}/>
+                    <Button label="Type" onClick={() => onType()}/>
+                    <Button label="Contains" onClick={() => onContains()}/>
                 </TabPanel>
                 <TabPanel header="Assertions">
-                    <Dropdown value={selectType} options={types} onChange={onTypeChange} placeholder="Should..." data-type="assert-selector"/>
+                    <Dropdown value={selectType} options={types} onChange={onTypeChange} placeholder="Should..."
+                              data-type="assert-selector"/>
                     {
                         selectType === "have.css" ?
-                            <Dropdown value={selectedStyle} options={computedStyle} onChange={onComputedStyleChange} placeholder="Select style..."/> : ""
+                            <Dropdown value={selectedStyle} options={computedStyle} onChange={onComputedStyleChange}
+                                      placeholder="Select style..."/> : ""
                     }
                 </TabPanel>
             </TabView>
@@ -176,4 +174,4 @@ const CypressMenu = () => {
     </section>, document.body);
 }
 
-export default  CypressMenu;
+export default CypressMenu;
