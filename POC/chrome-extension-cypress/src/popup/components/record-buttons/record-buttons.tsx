@@ -23,10 +23,12 @@ export const RecordButtons: FC<any>  = ({...props}) => {
             chrome.storage.local.set({ "popup": `${ (recordValue === 'start')}` } , function() {
 
                 chrome.tabs.query({active: true}, function(tabs) {
-                    chrome.tabs.sendMessage(tabs[0].id,{ menu: 'started' });
+                    chrome.tabs.sendMessage(tabs[0].id,{ menu:recordValue == 'stop'? 'started' :'stopped' });
 
-                })
-                setRecordValue(`${recordValue == 'stop' ?  'start': 'stop'}`)
+                });
+
+                setRecordValue(`${recordValue == 'stop' ?  'start': 'stop'}`);
+
             })
         });
     }
