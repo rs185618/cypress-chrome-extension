@@ -104,8 +104,6 @@ const CypressMenu = () => {
         displayMenu();
     }
     const onType = () => {
-        // const typeValue = prompt("please enter what you want to type : ");
-        debugger
         setSelectType('type');
         utils.generateCode(`cy.get("${cySelector}").type("${typedValue}");`);
         setTypedValue('')
