@@ -51,8 +51,8 @@ const CypressMenu = () => {
     const mouseOverListener = (e) => {
         if (document.querySelector('.menu-container')?.classList.contains('hide-menu')) {
             if (document.querySelector(useSelector(e).cySelector)?.hasAttribute('type') &&
-                document.querySelector(useSelector(e).cySelector).type === 'checkbox' ||
-                document.querySelector(useSelector(e).cySelector).type === 'radio') {
+                document.querySelector(useSelector(e).cySelector)?.getAttribute('type') === 'checkbox' ||
+                document.querySelector(useSelector(e).cySelector)?.getAttribute('type') === 'radio') {
                 document.querySelector(useSelector(e).cySelector).parentElement.classList.add('hoverBorder')
             } else {
                 document.querySelector(useSelector(e).cySelector).classList.add('hoverBorder')
