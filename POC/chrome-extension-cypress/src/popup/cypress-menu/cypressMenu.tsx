@@ -49,13 +49,20 @@ const CypressMenu = () => {
         });
     }
     const mouseOverListener = (e) => {
-        if (document.querySelector('.menu-container').classList.contains('hide-menu')) {
-            document.querySelector(useSelector(e).cySelector).classList.add('hoverBorder')
+        if (document.querySelector('.menu-container')?.classList.contains('hide-menu')) {
+            if (document.querySelector(useSelector(e).cySelector)?.hasAttribute('type') &&
+                document.querySelector(useSelector(e).cySelector).type === 'checkbox' ||
+                document.querySelector(useSelector(e).cySelector).type === 'radio') {
+                document.querySelector(useSelector(e).cySelector).parentElement.classList.add('hoverBorder')
+            } else {
+                document.querySelector(useSelector(e).cySelector).classList.add('hoverBorder')
+            }
         }
+
     }
     const mouseOutListener = (e) => {
-        if (document.querySelector('.menu-container').classList.contains('hide-menu')) {
-            document.querySelector(useSelector(e).cySelector).classList.remove('hoverBorder')
+        if (document.querySelector('.menu-container')?.classList.contains('hide-menu')) {
+            document.querySelector('.hoverBorder')?.classList.remove('hoverBorder')
         }
     }
     const addEventListeners = ()=>{
@@ -86,14 +93,22 @@ const CypressMenu = () => {
     }, [cySelector])
 
     const displayMenu = () => {
-        if (document.querySelector('.menu-container').classList.contains('hide-menu')) {
+        if (document.querySelector('.menu-container')?.classList.contains('hide-menu')) {
             if (cySelector) {
-                setMenu(true);
-                if (document.querySelector('.clickedBorder')) {
-                    document.querySelector('.clickedBorder').classList.remove('clickedBorder');
-                    document.querySelector('.hoverBorder').classList.remove('hoverBorder');
+                if(document.querySelector(cySelector)?.hasAttribute('class')) {
+                    setMenu(true);
+                    if (document.querySelector('.clickedBorder')) {
+                        document.querySelector('.clickedBorder')?.classList.remove('clickedBorder');
+                        document.querySelector('.hoverBorder')?.classList.remove('hoverBorder');
+                    }
+                    if (document.querySelector(cySelector).hasAttribute('type') &&
+                        document.querySelector(cySelector).type === 'checkbox' ||
+                        document.querySelector(cySelector).type === 'radio') {
+                        document.querySelector(cySelector).parentElement.classList.add('clickedBorder')
+                    } else {
+                        document.querySelector(cySelector).classList.add('clickedBorder');
+                    }
                 }
-                document.querySelector(cySelector).classList.add('clickedBorder');
             }
         } else {
             setMenu(false);
