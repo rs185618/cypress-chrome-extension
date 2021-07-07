@@ -1,16 +1,17 @@
 
-const getClosestParent = (elem, selector = '[id]') => {
+const getClosestParent = (elem , selector = '[id]') => {
     let tags = '';
-
-    for (; elem && elem !== document; elem = elem.parentNode) {
-        if (elem.matches(selector) || document.body === elem) {
-            return {
-                elem: elem,
-                tags: tags,
+    if(elem) {
+        for (; elem && elem !== document; elem = elem.parentNode) {
+            if (elem.matches(selector) || document.body === elem) {
+                return {
+                    elem: elem,
+                    tags: tags,
+                }
+            } else {
+                let index = [].indexOf.call(elem.parentNode.children, elem) + 1;
+                tags += elem.tagName + ':nth-child(' + index + ') ';
             }
-        } else {
-            let index = [].indexOf.call(elem.parentNode.children, elem) + 1;
-            tags += elem.tagName + ':nth-child('+index+') ';
         }
     }
     return null
