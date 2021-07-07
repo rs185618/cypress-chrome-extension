@@ -33,19 +33,21 @@ const CypressMenu = () => {
                 setSelectedElement(e.target);
                 chrome.storage.local.set({"selector": clickedSelector}, function() {
                     setCySelector(useSelector(e).cySelector);
+                    setTypedValue(useSelector(e).text);
                 });
             }
         });
     }
-
-    const changelistener = (e) => {
+    const changeListener = (e) => {
         chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
             if (items && items['recorder'] === 'start') {
-                setTypedValue(e.target.value)
+                setSelectedElement(e.target);
+                chrome.storage.local.set({"selector": useSelector(e).cySelector}, function() {
+                    setCySelector(useSelector(e).cySelector);
+                });
             }
         });
     }
-
     const mouseOverListener = (e) => {
         if (document.querySelector('.menu-container').classList.contains('hide-menu')) {
             document.querySelector(useSelector(e).cySelector).classList.add('hoverBorder')
@@ -58,11 +60,11 @@ const CypressMenu = () => {
     }
     const addEventListeners = ()=>{
         document.addEventListener('click',clickListener , false)
-        document.addEventListener('change',changelistener , false)
-
+        document.addEventListener('change',changeListener , false)
         document.addEventListener('mouseover',mouseOverListener , true);
         document.addEventListener('mouseout',mouseOutListener );
     }
+
     useEffect(() => {
         addEventListeners();
         chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -71,7 +73,7 @@ const CypressMenu = () => {
             }
             else if(request.menu === 'stopped'){
                 document.removeEventListener('click',clickListener , false)
-                document.removeEventListener('change',changelistener , false)
+                document.removeEventListener('change',changeListener , false)
 
                 document.removeEventListener('mouseover',mouseOverListener , true);
                 document.removeEventListener('mouseout',mouseOutListener );
