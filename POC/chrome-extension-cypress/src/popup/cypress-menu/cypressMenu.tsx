@@ -71,7 +71,7 @@ const CypressMenu = () => {
             }
             else if(request.menu === 'stopped'){
                 document.removeEventListener('click',clickListener , false)
-                document.removeEventListener('change',clickListener , false)
+                document.removeEventListener('change',changelistener , false)
 
                 document.removeEventListener('mouseover',mouseOverListener , true);
                 document.removeEventListener('mouseout',mouseOutListener );
