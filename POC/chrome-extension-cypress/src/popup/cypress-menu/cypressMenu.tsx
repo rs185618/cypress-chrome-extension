@@ -126,8 +126,9 @@ const CypressMenu = () => {
         displayMenu();
     }
     const onType = () => {
+        const typeValue = prompt("please enter what you want to type : ");
         setSelectType('type');
-        generateCode(`cy.get("${cySelector}").type("{1}");`);
+        generateCode(`cy.get("${cySelector}").type("${typeValue}");`);
         displayMenu();
     }
     const onContains = () => {
