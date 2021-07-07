@@ -40,30 +40,46 @@ const CypressMenu = () => {
         typeRef.current = data;
         _setSelectType(data);
     };
-
-    useEffect(() => {
-
-        document.addEventListener('click', (e) => {
-            chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
-                if (items && items['recorder'] === 'start') {
-                    const clickedSelector = useSelector(e).cySelector;
-                    chrome.storage.local.set({"selector": clickedSelector}, function() {
-                        setCySelector(useSelector(e).cySelector);
-                    });
-                }
-            });
-        }, false)
-
-        document.addEventListener('mouseover', (e) => {
-            if (document.querySelector('.menu-container').classList.contains('hide-menu')) {
-                document.querySelector(useSelector(e).cySelector).classList.add('hoverBorder')
+    const clickListener = (e) => {
+        chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
+            if (items && items['recorder'] === 'start') {
+                const clickedSelector = useSelector(e).cySelector;
+                chrome.storage.local.set({"selector": clickedSelector}, function() {
+                    setCySelector(useSelector(e).cySelector);
+                });
             }
-        }, true);
-        document.addEventListener('mouseout', (e) => {
-            if (document.querySelector('.menu-container').classList.contains('hide-menu')) {
-                document.querySelector(useSelector(e).cySelector).classList.remove('hoverBorder')
+        });
+    }
+    const mouseOverListener = (e) => {
+        if (document.querySelector('.menu-container').classList.contains('hide-menu')) {
+            document.querySelector(useSelector(e).cySelector).classList.add('hoverBorder')
+        }
+    }
+    const mouseOutListener = (e) => {
+        if (document.querySelector('.menu-container').classList.contains('hide-menu')) {
+            document.querySelector(useSelector(e).cySelector).classList.remove('hoverBorder')
+        }
+    }
+    const addEventListeners = ()=>{
+        document.addEventListener('click',clickListener , false)
+
+        document.addEventListener('mouseover',mouseOverListener , true);
+        document.addEventListener('mouseout',mouseOutListener );
+    }
+    useEffect(() => {
+        addEventListeners();
+        chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+            if (request.menu === 'started'){
+                addEventListeners();
+            }
+            else if(request.menu === 'stopped'){
+                document.removeEventListener('click',clickListener , false)
+
+                document.removeEventListener('mouseover',mouseOverListener , true);
+                document.removeEventListener('mouseout',mouseOutListener );
             }
         })
+
     }, [])
 
     useEffect(() => {
