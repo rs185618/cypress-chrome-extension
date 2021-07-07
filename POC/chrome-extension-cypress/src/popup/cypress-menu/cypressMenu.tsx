@@ -4,7 +4,6 @@ import * as ReactDOM from "react-dom";
 import {Button} from 'primereact/button';
 import {Dropdown} from 'primereact/dropdown';
 import {useSelector} from "../../selectorPicker";
-import "./cypress-menu.scss";
 import {TabPanel, TabView} from "primereact/tabview";
 import * as utils from "./utils";
 import getElementAssertions from './assertionTypes';
@@ -60,7 +59,7 @@ const CypressMenu = () => {
         }
 
     }
-    const mouseOutListener = (e) => {
+    const mouseOutListener = () => {
         if (document.querySelector('.menu-container')?.classList.contains('hide-menu')) {
             document.querySelector('.hoverBorder')?.classList.remove('hoverBorder')
         }
@@ -74,7 +73,7 @@ const CypressMenu = () => {
 
     useEffect(() => {
         addEventListeners();
-        chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        chrome.runtime.onMessage.addListener((request) => {
             if (request.menu === 'started'){
                 addEventListeners();
             }
