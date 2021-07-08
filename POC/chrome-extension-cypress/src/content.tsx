@@ -4,7 +4,6 @@ import CypressMenu from "./popup/cypress-menu/cypressMenu";
 const id = 'cypress-menu-assistant';
 
 const renderCypressMenu = () => {
-
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if (request.menu === 'started') {
             const section = document.getElementById(id)

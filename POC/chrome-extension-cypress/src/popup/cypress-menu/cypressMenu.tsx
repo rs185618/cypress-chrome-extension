@@ -25,6 +25,15 @@ const CypressMenu = () => {
         typeRef.current = data;
         _setSelectType(data);
     };
+    const resetAll = () => {
+        _setSelectType(null);
+        setCySelector('');
+        setTypedValue('');
+        setMenu(false);
+        setActiveIndex(0);
+        setSelectedStyle('');
+        setSelectedElement(null);
+    };
     const clickListener = (e) => {
         chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
             if (items && items['recorder'] === 'start') {
@@ -110,7 +119,9 @@ const CypressMenu = () => {
                 }
             }
         } else {
-            setMenu(false);
+            document.querySelector('.clickedBorder')?.classList.remove('clickedBorder');
+            document.querySelector('.hoverBorder')?.classList.remove('hoverBorder');
+            resetAll()
         }
     }
 
