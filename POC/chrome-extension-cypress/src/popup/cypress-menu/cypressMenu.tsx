@@ -10,7 +10,7 @@ import getElementAssertions from './assertionTypes';
 import styleProps from './styleProps';
 
 const id = 'cypress-menu-assistant';
-let flag = false;
+let preventClickEvent = false;
 const CypressMenu = () => {
     const [selectType, _setSelectType] = useState<any>(null);
     const [cySelector, setCySelector] = useState<any>('');
@@ -36,7 +36,7 @@ const CypressMenu = () => {
     };
     const clickListener = (e) => {
         const parent = document.querySelector('.menu-container');
-        if(!flag && !(parent !== e.target && parent.contains(e.target))){
+        if(!preventClickEvent && !(parent !== e.target && parent.contains(e.target))){
             e.stopImmediatePropagation();
             e.preventDefault();
             chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
@@ -51,7 +51,7 @@ const CypressMenu = () => {
             });
         }
         else{
-            flag = false;
+            preventClickEvent = false;
             return;
         }
 
@@ -140,9 +140,14 @@ const CypressMenu = () => {
         setSelectType('click')
         utils.generateCode(`cy.get("${cySelector}").click();`);
         displayMenu();
-        flag= true;
-        console.log(cySelector);
-        document.querySelector(cySelector).click();
+        preventClickEvent = true;
+        if(document.querySelector(cySelector).tagName === 'svg'){
+            document.querySelector(cySelector).parentElement.click();
+        }
+        else{
+            document.querySelector(cySelector).click();
+        }
+
     }
     const onType = () => {
         setSelectType('type');
@@ -199,7 +204,7 @@ const CypressMenu = () => {
         <div className={`menu-container ${menu ? 'show-menu' : 'hide-menu'}`} onClick={onContainerClick}>
             <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
                 <TabPanel header="Actions">
-                    <Button label="Click" id={'test'} onClick={() =>onClickChange()}/>
+                    <Button label="Click" id={'menu-click-button'} onClick={() =>onClickChange()}/>
                     {
                         selectedElement && utils.isInputText(selectedElement) ? <Button label="Type" onClick={() => onType()}/> : ""
                     }
