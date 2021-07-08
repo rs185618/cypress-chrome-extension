@@ -5,6 +5,7 @@ import './record-container.scss'
 export const RecordContainer: FC<any>  = ({...props}) => {
     const [codeArea, setCodeArea] = useState('');
 
+
     useEffect(() => {
         chrome.storage.local.get(/* String or Array */["selector", "generatedCode"], (items) => {
             if (items['generatedCode']) {
