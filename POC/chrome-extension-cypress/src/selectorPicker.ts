@@ -1,5 +1,5 @@
 
-const getClosestParent = (elem , selector = '[id]') => {
+export const getClosestParent = (elem , selector = '[id]') => {
     let tags = '';
     if(elem) {
         for (; elem && elem !== document; elem = elem.parentNode) {
@@ -18,11 +18,12 @@ const getClosestParent = (elem , selector = '[id]') => {
 };
 
 export const useSelector = (event?) => {
+
     const selector = 'data-testid';
     const parent = getClosestParent(event.target, `[${selector}]`);
     const firstTag = parent.elem.getAttribute([selector]);
     const firstSelector = firstTag ? `[${selector}='${firstTag}']` : 'BODY';
-    const cySelector = `${firstSelector} ${parent.tags.split(' ').reverse().join(' ')}`
+    const cySelector = `${firstSelector} ${parent.tags.split(' ').reverse().join(' ')}`;
     return {
         cySelector,
         value:event?.target?.value,

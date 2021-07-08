@@ -3,14 +3,14 @@ import './cypress-menu.scss';
 import * as ReactDOM from "react-dom";
 import {Button} from 'primereact/button';
 import {Dropdown} from 'primereact/dropdown';
-import {useSelector} from "../../selectorPicker";
+import {getClosestParent, useSelector} from "../../selectorPicker";
 import {TabPanel, TabView} from "primereact/tabview";
 import * as utils from "./utils";
 import getElementAssertions from './assertionTypes';
 import styleProps from './styleProps';
 
 const id = 'cypress-menu-assistant';
-
+let flag = false;
 const CypressMenu = () => {
     const [selectType, _setSelectType] = useState<any>(null);
     const [cySelector, setCySelector] = useState<any>('');
@@ -35,16 +35,27 @@ const CypressMenu = () => {
         setSelectedElement(null);
     };
     const clickListener = (e) => {
-        chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
-            if (items && items['recorder'] === 'start') {
-                const clickedSelector = useSelector(e).cySelector;
-                setSelectedElement(e.target);
-                chrome.storage.local.set({"selector": clickedSelector}, function() {
-                    setCySelector(useSelector(e).cySelector);
-                    setTypedValue(useSelector(e).text);
-                });
-            }
-        });
+        const parent = document.querySelector('.menu-container');
+        if(!flag && !(parent !== e.target && parent.contains(e.target))){
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
+                if (items && items['recorder'] === 'start') {
+                    const clickedSelector = useSelector(e).cySelector;
+                    setSelectedElement(e.target);
+                    chrome.storage.local.set({"selector": clickedSelector}, function() {
+                        setCySelector(useSelector(e).cySelector);
+                        setTypedValue(useSelector(e).text);
+                    });
+                }
+            });
+        }
+        else{
+            flag = false;
+            return;
+        }
+
+
     }
     const changeListener = (e) => {
         chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
@@ -74,8 +85,8 @@ const CypressMenu = () => {
         }
     }
     const addEventListeners = ()=>{
-        document.addEventListener('click',clickListener , false)
-        document.addEventListener('change',changeListener , false)
+        document.addEventListener('click',clickListener , true);
+        document.addEventListener('change',changeListener , true);
         document.addEventListener('mouseover',mouseOverListener , true);
         document.addEventListener('mouseout',mouseOutListener );
     }
@@ -87,8 +98,8 @@ const CypressMenu = () => {
                 addEventListeners();
             }
             else if(request.menu === 'stopped'){
-                document.removeEventListener('click',clickListener , false)
-                document.removeEventListener('change',changeListener , false)
+                document.removeEventListener('click',clickListener , true)
+                document.removeEventListener('change',changeListener , true)
 
                 document.removeEventListener('mouseover',mouseOverListener , true);
                 document.removeEventListener('mouseout',mouseOutListener );
@@ -129,6 +140,9 @@ const CypressMenu = () => {
         setSelectType('click')
         utils.generateCode(`cy.get("${cySelector}").click();`);
         displayMenu();
+        flag= true;
+        console.log(cySelector);
+        document.querySelector(cySelector).click();
     }
     const onType = () => {
         setSelectType('type');
@@ -185,7 +199,7 @@ const CypressMenu = () => {
         <div className={`menu-container ${menu ? 'show-menu' : 'hide-menu'}`} onClick={onContainerClick}>
             <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
                 <TabPanel header="Actions">
-                    <Button label="Click" onClick={() => onClickChange()}/>
+                    <Button label="Click" id={'test'} onClick={() =>onClickChange()}/>
                     {
                         selectedElement && utils.isInputText(selectedElement) ? <Button label="Type" onClick={() => onType()}/> : ""
                     }
