@@ -24,7 +24,7 @@ export const isInputText = (elem: HTMLElement): boolean  => {
 export const isCanCheck = (elem: HTMLElement): boolean  => {
     const tagName = elem.tagName.toLowerCase();
     return isFormElement(elem) &&
-        elem.tagName === 'input' &&
+        tagName === 'input' &&
         (elem.getAttribute('type') === 'checkbox' || elem.getAttribute('type') === 'radio');
 }
 
