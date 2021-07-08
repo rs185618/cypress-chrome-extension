@@ -105,22 +105,23 @@ const CypressMenu = () => {
     const displayMenu = () => {
         if (document.querySelector('.menu-container')?.classList.contains('hide-menu')) {
             if (cySelector) {
-                if(document.querySelector(cySelector)?.hasAttribute('class')) {
+                const elem = document.querySelector(cySelector);
+                if(elem) {
                     setMenu(true);
-                    if (document.querySelector('.clickedBorder')) {
-                        document.querySelector('.clickedBorder')?.classList.remove('clickedBorder');
-                        document.querySelector('.hoverBorder')?.classList.remove('hoverBorder');
-                    }
-                    if (document.querySelector(cySelector).hasAttribute('type') &&
-                        document.querySelector(cySelector).type === 'checkbox' ||
-                        document.querySelector(cySelector).type === 'radio') {
-                        document.querySelector(cySelector).parentElement.classList.add('clickedBorder')
+                    document.querySelector('.clickedBorder')?.classList.remove('clickedBorder');
+                    document.querySelector('.hoverBorder')?.classList.remove('hoverBorder');
+                    if (elem.hasAttribute('type') &&
+                        elem.type === 'checkbox' ||
+                        elem.type === 'radio') {
+                        elem.parentElement.classList.add('clickedBorder')
                     } else {
-                        document.querySelector(cySelector).classList.add('clickedBorder');
+                        elem.classList.add('clickedBorder');
                     }
                 }
             }
         } else {
+            document.querySelector('.clickedBorder')?.classList.remove('clickedBorder');
+            document.querySelector('.hoverBorder')?.classList.remove('hoverBorder');
             setMenu(false);
         }
     }
