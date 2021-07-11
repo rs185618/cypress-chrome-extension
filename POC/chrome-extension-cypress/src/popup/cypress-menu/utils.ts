@@ -29,17 +29,19 @@ export const isCanCheck = (elem: HTMLElement): boolean  => {
 }
 
 export const generateCode = (template: string): void => {
-    let generatedCode: string;
     chrome.storage.local.get(["selector", "generatedCode"], (items) => {
-        if (items?.generatedCode) {
-            generatedCode = items['generatedCode'];
-        }
         const clickedSelector = items['selector'];
+        let generatedCode = items['generatedCode'];
+        console.log(generatedCode);
+        if (items?.generatedCode) {
+            generatedCode[0] = `${generatedCode[0] ? generatedCode[0] + '\n' : ''}${template.replace('{0}', clickedSelector.cySelector).replace('{1}', clickedSelector.value)
+              .replace('{2}', clickedSelector.text)}`
+        }
+
         chrome.storage.local.set(
             {
-                "selector": clickedSelector, "generatedCode":
-                    `${generatedCode ? generatedCode + '\n' : ''}${template.replace('{0}', clickedSelector.cySelector).replace('{1}', clickedSelector.value)
-                        .replace('{2}', clickedSelector.text)}`
+                "selector": clickedSelector, "generatedCode":generatedCode
+
             },
             function () {
                 //  Data's been saved boys and girls, go on home

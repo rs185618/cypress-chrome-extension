@@ -8,6 +8,13 @@ export default function Popup() {
   useEffect(() => {
     // Example of how to send a message to eventPage.ts.
     chrome.runtime.sendMessage({ popupMounted: true });
+    chrome.storage.local.set({testSuitIndex:0},()=>{
+
+    });
+    chrome.storage.local.set({"generatedCode":['']},()=>{
+
+    });
+
 
   }, []);
 

@@ -19,18 +19,23 @@ export const RecordButtons: FC<any>  = ({...props}) => {
     }, [recordValue])
 
     const record = () => {
-        chrome.storage.local.set({ "recorder": `${recordValue == 'stop' ?  'start': 'stop'}` }, function(){
-            chrome.storage.local.set({ "popup": `${ (recordValue === 'start')}` } , function() {
+        chrome.storage.local.get(['testSuitIndex'],(items)=>{
+            chrome.storage.local.set({ "recorder": `${recordValue == 'stop' ?  'start': 'stop'}` }, function(){
+                chrome.storage.local.set({ "popup": `${ (recordValue === 'start')}` } , function() {
 
-                chrome.tabs.query({active: true}, function(tabs) {
-                    chrome.tabs.sendMessage(tabs[0].id,{ menu:recordValue == 'stop'? 'started' :'stopped' });
+                    chrome.tabs.query({active: true}, function(tabs) {
+                        chrome.tabs.sendMessage(tabs[0].id,{ menu:recordValue == 'stop'? 'started' :'stopped' });
 
-                });
+                    });
+                    if(recordValue == 'start'){
+                        chrome.storage.local.set({testSuitIndex:items['testSuitIndex'] + 1})
+                    }
+                    setRecordValue(`${recordValue == 'stop' ?  'start': 'stop'}`);
 
-                setRecordValue(`${recordValue == 'stop' ?  'start': 'stop'}`);
+                })
+            });
+        })
 
-            })
-        });
     }
 
 

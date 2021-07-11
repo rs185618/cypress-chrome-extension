@@ -10,15 +10,20 @@ export const RecordContainer: FC<any>  = ({...props}) => {
     useEffect(() => {
         chrome.storage.local.get(/* String or Array */["selector", "generatedCode"], (items) => {
             if (items['generatedCode']) {
-                setCodeArea(items['generatedCode'])
+                setCodeArea(items['generatedCode'][0]);
             }
         });
     }, [])
 
     useEffect(() => {
-        chrome.storage.local.set({ "generatedCode": codeArea }, function(){
-            //  Data's been saved boys and girls, go on home
-        });
+        chrome.storage.local.get(['generatedCode'],(items)=>{
+            let generatedCode = items['generatedCode'];
+            generatedCode[0]=codeArea;
+            chrome.storage.local.set({ "generatedCode": generatedCode }, function(){
+                //  Data's been saved boys and girls, go on home
+            });
+        })
+
     }, [codeArea])
 
     const updateCode = (value) => {
