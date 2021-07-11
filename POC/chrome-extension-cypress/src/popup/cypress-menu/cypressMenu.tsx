@@ -19,6 +19,7 @@ const CypressMenu = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [selectedStyle, setSelectedStyle] = useState('');
     const [selectedElement, setSelectedElement] = useState(null);
+    const [testTitle,setTestTitle] = useState('');
     const typeRef = React.useRef(selectType);
 
     const setSelectType = data => {
@@ -202,6 +203,10 @@ const CypressMenu = () => {
 
     return ReactDOM.createPortal(<section id={id}>
         <div className={`menu-container ${menu ? 'show-menu' : 'hide-menu'}`} onClick={onContainerClick}>
+            <div className='test-title'>
+                <label>Test Title:</label>
+                <input value={testTitle} onChange={e=>setTestTitle(e.target.value)}/>
+            </div>
             <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
                 <TabPanel header="Actions">
                     <Button label="Click" id={'menu-click-button'} onClick={() =>onClickChange()}/>

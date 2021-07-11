@@ -4,7 +4,11 @@
 
 $primary-color: #f7af80;
 $background-color: rgba(100, 100, 100, .7);
-
+.test-title{
+  background-color: $background-color;
+  padding: 15px;
+  color: white;
+}
 .menu-container {
   padding: 15px;
   width: 360px;
@@ -20,7 +24,7 @@ $background-color: rgba(100, 100, 100, .7);
 .p-tabview {
   .p-tabview-nav {
     background-color: $background-color;
-    margin: 15px 0;
+    margin: 0 0 15px 0;
     padding: 15px;
   }
   .p-tabview-panels {

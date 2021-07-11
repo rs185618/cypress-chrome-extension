@@ -4,7 +4,7 @@ import {CodeArea} from "../components/code-area/code-area";
 import './record-container.scss'
 export const RecordContainer: FC<any>  = ({...props}) => {
     const [codeArea, setCodeArea] = useState('');
-    const [testTitle, setTestTitle] = useState('');
+    const [describeTitle, setDescribeTitle] = useState('');
 
 
     useEffect(() => {
@@ -34,10 +34,10 @@ export const RecordContainer: FC<any>  = ({...props}) => {
     return <div className={'record-container'}>
         <RecordButtons onClearTextArea={clearCode} hidePopup={props.hidePopup}/>
         <div className='test-title'>
-            <label>Test Title:</label>
-            <input value={testTitle} onChange={e=>setTestTitle(e.target.value)}/>
+            <label>Describe Title:</label>
+            <input value={describeTitle} onChange={e=>setDescribeTitle(e.target.value)}/>
         </div>
-        <CodeArea codeAreaValue={codeArea} testTitle={testTitle} setCodeAreaValue={(value) => updateCode(value)}/>
+        <CodeArea codeAreaValue={codeArea} describeTitle={describeTitle} setCodeAreaValue={(value) => updateCode(value)}/>
 
 
     </div>
