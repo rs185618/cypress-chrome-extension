@@ -19,7 +19,7 @@ const CypressMenu = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [selectedStyle, setSelectedStyle] = useState('');
     const [selectedElement, setSelectedElement] = useState(null);
-    const [testTitle,setTestTitle] = useState('');
+    const [testTitle,setTestTitle] = useState('')
     const typeRef = React.useRef(selectType);
 
     const setSelectType = data => {
@@ -109,6 +109,9 @@ const CypressMenu = () => {
     }, [])
 
     useEffect(() => {
+        if(cySelector && document.querySelector(cySelector).id === 'test-title-input'){ // no idea why this works, but it does
+            return;
+        }
         displayMenu();
     }, [cySelector])
 
@@ -133,6 +136,7 @@ const CypressMenu = () => {
         } else {
             document.querySelector('.clickedBorder')?.classList.remove('clickedBorder');
             document.querySelector('.hoverBorder')?.classList.remove('hoverBorder');
+            onTitleChange();
             resetAll()
         }
     }
@@ -201,11 +205,22 @@ const CypressMenu = () => {
     }
     const types = getElementAssertions(selectedElement);
 
+    const onTitleChange = () =>{
+        chrome.storage.local.get(["itTitles",'testSuitIndex',], (items) => {
+            const index = items["testSuitIndex"];
+            const itTitles = items["itTitles"];
+            itTitles[index] = testTitle;
+            chrome.storage.local.set({"itTitles":itTitles},()=>{
+
+            });
+        });
+    }
+
     return ReactDOM.createPortal(<section id={id}>
         <div className={`menu-container ${menu ? 'show-menu' : 'hide-menu'}`} onClick={onContainerClick}>
             <div className='test-title'>
                 <label>Test Title:</label>
-                <input value={testTitle} onChange={e=>setTestTitle(e.target.value)}/>
+                <input id='test-title-input' onChange={e=>setTestTitle(e.target.value)} value={testTitle}/>
             </div>
             <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
                 <TabPanel header="Actions">

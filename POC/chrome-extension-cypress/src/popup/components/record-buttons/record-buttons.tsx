@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
 import { Button } from 'primereact/button';
 export const RecordButtons: FC<any>  = ({...props}) => {
-    const [recordValue, setRecordValue] = useState('stop')
+    const [recordValue, setRecordValue] = useState('start')
 
     useEffect(() => {
         chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
@@ -27,9 +27,6 @@ export const RecordButtons: FC<any>  = ({...props}) => {
                         chrome.tabs.sendMessage(tabs[0].id,{ menu:recordValue == 'stop'? 'started' :'stopped' });
 
                     });
-                    if(recordValue == 'start'){
-                        chrome.storage.local.set({testSuitIndex:items['testSuitIndex'] + 1})
-                    }
                     setRecordValue(`${recordValue == 'stop' ?  'start': 'stop'}`);
 
                 })

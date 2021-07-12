@@ -8,17 +8,18 @@ export const RecordContainer: FC<any>  = ({...props}) => {
 
 
     useEffect(() => {
-        chrome.storage.local.get(/* String or Array */["selector", "generatedCode"], (items) => {
+        chrome.storage.local.get(/* String or Array */["selector", "generatedCode","itTitles",'testSuitIndex'], (items) => {
             if (items['generatedCode']) {
-                setCodeArea(items['generatedCode'][0]);
+                setCodeArea(items['generatedCode'].join('\n'));
             }
         });
     }, [])
 
     useEffect(() => {
-        chrome.storage.local.get(['generatedCode'],(items)=>{
+        chrome.storage.local.get(['generatedCode','testSuitIndex'],(items)=>{
             let generatedCode = items['generatedCode'];
-            generatedCode[0]=codeArea;
+            let index = items['testSuitIndex']
+            generatedCode[index]=codeArea;
             chrome.storage.local.set({ "generatedCode": generatedCode }, function(){
                 //  Data's been saved boys and girls, go on home
             });
@@ -31,7 +32,7 @@ export const RecordContainer: FC<any>  = ({...props}) => {
     }
 
     const clearCode = () => {
-        chrome.storage.local.set({ "generatedCode": '' }, function(){
+        chrome.storage.local.set({ "generatedCode": [] ,"testSuitIndex":0,itTitles:['']}, function(){
             setCodeArea('')
         });
     }
@@ -42,7 +43,7 @@ export const RecordContainer: FC<any>  = ({...props}) => {
             <label>Describe Title:</label>
             <input value={describeTitle} onChange={e=>setDescribeTitle(e.target.value)}/>
         </div>
-        <CodeArea codeAreaValue={codeArea} describeTitle={describeTitle} setCodeAreaValue={(value) => updateCode(value)}/>
+        <CodeArea code ={codeArea}describeTitle={describeTitle} setCodeAreaValue={(value) => updateCode(value)}/>
 
 
     </div>

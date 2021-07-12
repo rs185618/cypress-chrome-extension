@@ -6,14 +6,14 @@ import {RecordContainer} from "./container/record-container";
 export default function Popup() {
   const [hidden, setHidden] = useState(false);
   useEffect(() => {
-    // Example of how to send a message to eventPage.ts.
-    chrome.runtime.sendMessage({ popupMounted: true });
     chrome.storage.local.set({testSuitIndex:0},()=>{
 
     });
     chrome.storage.local.set({"generatedCode":['']},()=>{
 
     });
+    chrome.storage.local.set({"itTitles":['']})
+    chrome.runtime.sendMessage({ popupMounted: true });
 
 
   }, []);
