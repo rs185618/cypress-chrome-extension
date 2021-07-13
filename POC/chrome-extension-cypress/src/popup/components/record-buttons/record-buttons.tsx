@@ -1,12 +1,25 @@
 import React, {FC, useEffect, useState} from 'react';
 import { Button } from 'primereact/button';
 export const RecordButtons: FC<any>  = ({...props}) => {
-    const [recordValue, setRecordValue] = useState('start')
+    const [recordValue, setRecordValue] = useState('stop')
 
     useEffect(() => {
+        chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+            // onMessage must return "true" if response is async.
+            let isResponseAsync = false;
+
+            return isResponseAsync;
+        });
+        chrome.storage.onChanged.addListener(function (changes, namespace) {
+            if(changes.refresh){
+                setRecordValue('stop');
+            }
+            chrome.storage.local.set({ "refresh":  false});
+        });
         chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
             if (items && items['recorder']) setRecordValue(items['recorder'])
         });
+
     }, [])
     useEffect(() => {
             chrome.storage.local.get(/* String or Array */["popup"], (items) => {

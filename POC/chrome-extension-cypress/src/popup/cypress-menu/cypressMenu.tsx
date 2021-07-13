@@ -23,6 +23,7 @@ const CypressMenu = () => {
     const typeRef = React.useRef(selectType);
 
     useEffect(() => {
+
         addEventListeners();
         chrome.runtime.onMessage.addListener((request) => {
             if (request.menu === 'started') {
@@ -30,11 +31,13 @@ const CypressMenu = () => {
             } else if (request.menu === 'stopped') {
                 removeEventListeners()
             }
-        })
+        });
+
+
     }, []);
 
     useEffect(() => {
-        if(cySelector && document.querySelector(cySelector).id === 'test-title-input'){ // no idea why this works, but it does
+        if (cySelector && document.querySelector(cySelector).id === 'test-title-input') { // no idea why this works, but it does
             return;
         }
         displayMenu();
@@ -66,7 +69,7 @@ const CypressMenu = () => {
     };
     const clickListener = (e) => {
         const parent = document.querySelector('.menu-container');
-        if(e.target.classList.contains('p-dropdown-item')){
+        if (e.target.classList.contains('p-dropdown-item')) {
             e.preventDefault();
             return;
         }
@@ -117,8 +120,6 @@ const CypressMenu = () => {
     }
 
 
-
-
     const displayMenu = () => {
         if (document.querySelector('.menu-container')?.classList.contains('hide-menu')) {
             if (cySelector) {
@@ -144,12 +145,12 @@ const CypressMenu = () => {
             resetAll()
         }
     }
-    const onTitleChange = () =>{
-        chrome.storage.local.get(["itTitles",'testSuitIndex',], (items) => {
+    const onTitleChange = () => {
+        chrome.storage.local.get(["itTitles", 'testSuitIndex',], (items) => {
             const index = items["testSuitIndex"];
             const itTitles = items["itTitles"];
             itTitles[index] = testTitle;
-            chrome.storage.local.set({"itTitles":itTitles},()=>{
+            chrome.storage.local.set({"itTitles": itTitles}, () => {
 
             });
         });
