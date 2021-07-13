@@ -169,13 +169,13 @@ const CypressMenu = () => {
     }
     const onType = () => {
         setSelectType('type');
-        utils.generateCode(`cy.get("${cySelector}").type("${typedValue}");`);
-        setTypedValue('')
+        utils.generateCode(`cy.get("${cySelector}").type("${document.querySelector(cySelector).value}");`);
         displayMenu();
     }
     const onContains = () => {
         setSelectType('contains');
-        utils.generateCode(`cy.get("${cySelector}").contains("${typedValue}")`);
+        const contain  = typedValue || '';
+        utils.generateCode(`cy.get("${cySelector}").contains("${contain}")`);
         displayMenu();
     }
     const onTypeChange = (e) => {
