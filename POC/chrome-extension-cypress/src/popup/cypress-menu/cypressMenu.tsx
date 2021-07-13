@@ -169,7 +169,7 @@ const CypressMenu = () => {
     }
     const onType = () => {
         setSelectType('type');
-        utils.generateCode(`cy.get("${cySelector}").type("${document.querySelector(cySelector).value}");`);
+        utils.generateCode(`cy.get("${cySelector}").first().type("${document.querySelector(cySelector).value}");`);
         displayMenu();
     }
     const onContains = () => {

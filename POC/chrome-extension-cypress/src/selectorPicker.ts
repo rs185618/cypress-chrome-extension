@@ -23,7 +23,8 @@ export const useSelector = (event?) => {
     const selector = 'data-testid';
     const parent = getClosestParent(event.target, `[${selector}]`);
     const firstTag = parent.elem.getAttribute([selector]);
-    const firstSelector = firstTag ? `[${selector}='${firstTag}']` : 'BODY';
+    //const firstSelector = firstTag ? `[${selector}='${firstTag}']` : 'BODY';
+    const firstSelector =  'BODY';
     const cySelector = `${firstSelector} ${parent.tags.split(' ').reverse().join(' ')}`;
     return {
         cySelector,
