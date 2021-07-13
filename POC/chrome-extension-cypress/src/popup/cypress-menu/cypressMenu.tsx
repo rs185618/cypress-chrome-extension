@@ -19,13 +19,40 @@ const CypressMenu = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [selectedStyle, setSelectedStyle] = useState('');
     const [selectedElement, setSelectedElement] = useState(null);
-    const [testTitle,setTestTitle] = useState('')
+    const [testTitle, setTestTitle] = useState('');
     const typeRef = React.useRef(selectType);
 
+    useEffect(() => {
+        addEventListeners();
+        chrome.runtime.onMessage.addListener((request) => {
+            if (request.menu === 'started') {
+                addEventListeners();
+            } else if (request.menu === 'stopped') {
+                removeEventListeners()
+            }
+        })
+    }, []);
+
+    useEffect(() => {
+        displayMenu();
+    }, [cySelector])
     const setSelectType = data => {
         typeRef.current = data;
         _setSelectType(data);
     };
+
+    const addEventListeners = () => {
+        document.addEventListener('click', clickListener, true);
+        document.addEventListener('change', changeListener, false);
+        document.addEventListener('mouseover', mouseOverListener, true);
+        document.addEventListener('mouseout', mouseOutListener);
+    }
+    const removeEventListeners = () => {
+        document.removeEventListener('click', clickListener, true)
+        document.removeEventListener('change', changeListener, false)
+        document.removeEventListener('mouseover', mouseOverListener, true);
+        document.removeEventListener('mouseout', mouseOutListener);
+    }
     const resetAll = () => {
         _setSelectType(null);
         setCySelector('');
@@ -37,32 +64,33 @@ const CypressMenu = () => {
     };
     const clickListener = (e) => {
         const parent = document.querySelector('.menu-container');
-        if(!preventClickEvent && !(parent !== e.target && parent.contains(e.target))){
+        if(e.target.classList.contains('p-dropdown-item')){
+            e.preventDefault();
+            return;
+        }
+        if (!preventClickEvent && !(parent !== e.target && parent.contains(e.target))) {
             e.stopImmediatePropagation();
             e.preventDefault();
             chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
                 if (items && items['recorder'] === 'start') {
                     const clickedSelector = useSelector(e).cySelector;
                     setSelectedElement(e.target);
-                    chrome.storage.local.set({"selector": clickedSelector}, function() {
+                    chrome.storage.local.set({"selector": clickedSelector}, function () {
                         setCySelector(useSelector(e).cySelector);
                         setTypedValue(useSelector(e).text);
                     });
                 }
             });
-        }
-        else{
+        } else {
             preventClickEvent = false;
             return;
         }
-
-
     }
     const changeListener = (e) => {
         chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
             if (items && items['recorder'] === 'start') {
                 setSelectedElement(e.target);
-                chrome.storage.local.set({"selector": useSelector(e).cySelector}, function() {
+                chrome.storage.local.set({"selector": useSelector(e).cySelector}, function () {
                     setCySelector(useSelector(e).cySelector);
                 });
             }
@@ -85,40 +113,14 @@ const CypressMenu = () => {
             document.querySelector('.hoverBorder')?.classList.remove('hoverBorder')
         }
     }
-    const addEventListeners = ()=>{
-        document.addEventListener('click',clickListener , true);
-        document.addEventListener('change',changeListener , true);
-        document.addEventListener('mouseover',mouseOverListener , true);
-        document.addEventListener('mouseout',mouseOutListener );
-    }
 
-    useEffect(() => {
-        addEventListeners();
-        chrome.runtime.onMessage.addListener((request) => {
-            if (request.menu === 'started'){
-                addEventListeners();
-            }
-            else if(request.menu === 'stopped'){
-                document.removeEventListener('click',clickListener , true)
-                document.removeEventListener('change',changeListener , true)
 
-                document.removeEventListener('mouseover',mouseOverListener , true);
-                document.removeEventListener('mouseout',mouseOutListener );
-            }
-        })
-    }, [])
 
-    useEffect(() => {
-        if(cySelector && document.querySelector(cySelector).id === 'test-title-input'){ // no idea why this works, but it does
-            return;
-        }
-        displayMenu();
-    }, [cySelector])
 
     const displayMenu = () => {
         if (document.querySelector('.menu-container')?.classList.contains('hide-menu')) {
             if (cySelector) {
-                if(document.querySelector(cySelector)?.hasAttribute('class')) {
+                if (document.querySelector(cySelector)?.hasAttribute('class')) {
                     setMenu(true);
                     if (document.querySelector('.clickedBorder')) {
                         document.querySelector('.clickedBorder')?.classList.remove('clickedBorder');
@@ -136,7 +138,6 @@ const CypressMenu = () => {
         } else {
             document.querySelector('.clickedBorder')?.classList.remove('clickedBorder');
             document.querySelector('.hoverBorder')?.classList.remove('hoverBorder');
-            onTitleChange();
             resetAll()
         }
     }
@@ -146,10 +147,9 @@ const CypressMenu = () => {
         utils.generateCode(`cy.get("${cySelector}").click();`);
         displayMenu();
         preventClickEvent = true;
-        if(document.querySelector(cySelector).tagName === 'svg'){
+        if (document.querySelector(cySelector).tagName === 'svg') {
             document.querySelector(cySelector).parentElement.click();
-        }
-        else{
+        } else {
             document.querySelector(cySelector).click();
         }
 
@@ -162,33 +162,28 @@ const CypressMenu = () => {
     }
     const onContains = () => {
         setSelectType('contains');
-        utils.generateCode(`cy.get("${cySelector}").contains("{2}")`);
+        utils.generateCode(`cy.get("${cySelector}").contains("${typedValue}")`);
         displayMenu();
     }
     const onTypeChange = (e) => {
         setSelectType(e.value);
         let value = ""
         let toggleView = displayMenu;
-
-        switch (e.value){
+        const cySelectorElement = document.querySelector(cySelector);
+        switch (e.value) {
             case "have.value":
-                if (useSelector(e.target).value) {
-                    value = useSelector(e.target).value;
-                    utils.generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}");`);
-                }
+                value = cySelectorElement.value ? cySelectorElement.value : '';
                 break;
             case "have.css":
                 toggleView = null;
                 break;
             case "have.length":
-                if (document.querySelector(cySelector).value) {
-                    value = document.querySelector(cySelector).value.length;
-                    utils.generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}");`);
-                }
+                value = cySelectorElement.value ? cySelectorElement.value.length : 0;
                 break;
             default:
                 utils.generateCode(`cy.get(${cySelector}).should("${e.value}");`);
         }
+        utils.generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}");`);
         toggleView && toggleView();
     }
     const onContainerClick = (e) => {
@@ -205,28 +200,18 @@ const CypressMenu = () => {
     }
     const types = getElementAssertions(selectedElement);
 
-    const onTitleChange = () =>{
-        chrome.storage.local.get(["itTitles",'testSuitIndex',], (items) => {
-            const index = items["testSuitIndex"];
-            const itTitles = items["itTitles"];
-            itTitles[index] = testTitle;
-            chrome.storage.local.set({"itTitles":itTitles},()=>{
-
-            });
-        });
-    }
-
     return ReactDOM.createPortal(<section id={id}>
         <div className={`menu-container ${menu ? 'show-menu' : 'hide-menu'}`} onClick={onContainerClick}>
             <div className='test-title'>
                 <label>Test Title:</label>
-                <input id='test-title-input' onChange={e=>setTestTitle(e.target.value)} value={testTitle}/>
+                <input value={testTitle} onChange={e => setTestTitle(e.target.value)}/>
             </div>
             <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
                 <TabPanel header="Actions">
-                    <Button label="Click" id={'menu-click-button'} onClick={() =>onClickChange()}/>
+                    <Button label="Click" id={'menu-click-button'} onClick={() => onClickChange()}/>
                     {
-                        selectedElement && utils.isInputText(selectedElement) ? <Button label="Type" onClick={() => onType()}/> : ""
+                        selectedElement && utils.isInputText(selectedElement) ?
+                            <Button label="Type" onClick={() => onType()}/> : ""
                     }
 
                     <Button label="Contains" onClick={() => onContains()}/>
