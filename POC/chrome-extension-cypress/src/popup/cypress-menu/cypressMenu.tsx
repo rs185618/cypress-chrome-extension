@@ -34,13 +34,15 @@ const CypressMenu = () => {
     }, []);
 
     useEffect(() => {
+        if(cySelector && document.querySelector(cySelector).id === 'test-title-input'){ // no idea why this works, but it does
+            return;
+        }
         displayMenu();
     }, [cySelector])
     const setSelectType = data => {
         typeRef.current = data;
         _setSelectType(data);
     };
-
     const addEventListeners = () => {
         document.addEventListener('click', clickListener, true);
         document.addEventListener('change', changeListener, false);
@@ -138,10 +140,20 @@ const CypressMenu = () => {
         } else {
             document.querySelector('.clickedBorder')?.classList.remove('clickedBorder');
             document.querySelector('.hoverBorder')?.classList.remove('hoverBorder');
+            onTitleChange()
             resetAll()
         }
     }
+    const onTitleChange = () =>{
+        chrome.storage.local.get(["itTitles",'testSuitIndex',], (items) => {
+            const index = items["testSuitIndex"];
+            const itTitles = items["itTitles"];
+            itTitles[index] = testTitle;
+            chrome.storage.local.set({"itTitles":itTitles},()=>{
 
+            });
+        });
+    }
     const onClickChange = () => {
         setSelectType('click')
         utils.generateCode(`cy.get("${cySelector}").click();`);
@@ -204,7 +216,7 @@ const CypressMenu = () => {
         <div className={`menu-container ${menu ? 'show-menu' : 'hide-menu'}`} onClick={onContainerClick}>
             <div className='test-title'>
                 <label>Test Title:</label>
-                <input value={testTitle} onChange={e => setTestTitle(e.target.value)}/>
+                <input id='test-title-input' onChange={e => setTestTitle(e.target.value)}/>
             </div>
             <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
                 <TabPanel header="Actions">

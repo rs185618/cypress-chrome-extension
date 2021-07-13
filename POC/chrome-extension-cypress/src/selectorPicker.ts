@@ -3,7 +3,8 @@ export const getClosestParent = (elem , selector = '[id]') => {
     let tags = '';
     if(elem) {
         for (; elem && elem !== document; elem = elem.parentNode) {
-            if (elem.matches(selector) || document.body === elem) {
+            //if (elem.matches(selector) || document.body === elem) {
+            if ( document.body === elem) {
                 return {
                     elem: elem,
                     tags: tags,
