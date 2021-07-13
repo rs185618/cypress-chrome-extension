@@ -6,8 +6,12 @@ export const CodeArea  = ({ setCodeAreaValue,describeTitle,code}) => {
     const [numOfTests,setNumOfTests] = useState(0);
     const [codes,setCodes] = useState(['']);
     const [URL,setURL] = useState('');
+    const [vw,setVW] = useState(0);
+    const [vh,setVH] = useState(0);
     chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
         setURL(tabs[0].url.replace(/^(?:\/\/|[^\/]+)*\//, ""));
+        setVW(tabs[0].width);
+        setVH(tabs[0].height);
     });
     useEffect(()=>{
         chrome.storage.local.get(["selector", "generatedCode","itTitles",'testSuitIndex'], (items) => {
@@ -16,8 +20,6 @@ export const CodeArea  = ({ setCodeAreaValue,describeTitle,code}) => {
             setCodes(items['generatedCode']);
         });
     }, []);
-    const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
-    const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
     let testText = '';
     if(code!==''){
         for(let i = 0; i <= numOfTests;i++)
