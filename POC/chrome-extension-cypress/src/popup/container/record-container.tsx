@@ -16,11 +16,11 @@ export const RecordContainer: FC<any>  = ({...props}) => {
     }, [])
 
     useEffect(() => {
-        chrome.storage.local.get(['generatedCode','testSuitIndex'],(items)=>{
+        chrome.storage.local.get(['generatedCode','testSuitIndex','itTitles'],(items)=>{
             let generatedCode = items['generatedCode'];
-            let index = items['testSuitIndex']
+            let index = items['testSuitIndex'];
             generatedCode[index]=codeArea;
-            chrome.storage.local.set({ "generatedCode": generatedCode }, function(){
+            chrome.storage.local.set({ "generatedCode": generatedCode,"testSuitIndex":index,'itTitles':items['itTitles'] }, function(){
                 //  Data's been saved boys and girls, go on home
             });
         })

@@ -11,6 +11,12 @@ const renderCypressMenu = () => {
                 ReactDOM.render(<CypressMenu />, document.createDocumentFragment()) ;
             }
         }
+        else if(request.menu ==='stopped'){
+            chrome.storage.local.get(['testSuitIndex','itTitles'],(items)=>{
+                console.log('*******',typeof items['testSuitIndex'],items);
+                chrome.storage.local.set({'testSuitIndex':items['testSuitIndex'] + 1,'itTitles':items['itTitles']})
+            })
+        }
     })
 }
 

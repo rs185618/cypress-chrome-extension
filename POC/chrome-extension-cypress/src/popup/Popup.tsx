@@ -6,7 +6,7 @@ import {RecordContainer} from "./container/record-container";
 export default function Popup() {
   const [hidden, setHidden] = useState(false);
   useEffect(() => {
-    chrome.storage.local.set({testSuitIndex:0},()=>{
+    chrome.storage.local.set({"testSuitIndex":0},()=>{
 
     });
     chrome.storage.local.set({"generatedCode":['']},()=>{
