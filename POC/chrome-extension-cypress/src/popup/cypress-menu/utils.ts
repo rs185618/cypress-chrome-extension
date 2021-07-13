@@ -40,7 +40,7 @@ export const generateCode = (template: string): void => {
 
         chrome.storage.local.set(
             {
-                "selector": clickedSelector, "generatedCode":generatedCode
+                "selector": clickedSelector, "generatedCode":generatedCode,"testSuitIndex":index
 
             },
             function () {
