@@ -5,13 +5,14 @@ const commonTypes = [
     {label: 'Be Hidden', value: 'not.be.visible'},
     {label: 'Exist', value: 'exist'},
     {label: 'Not Exist', value: 'not.exist'},
+    {label: 'Be Disabled', value: 'be.disabled'},
+    {label: 'Not Be Disabled', value: 'not.be.disabled'},
     {label: 'Css', value: 'have.css'},
-    {label: 'Have length', value: 'have.length'},
 ];
 const formTypes = [
     {label: 'Have Value', value: 'have.value'},
-    {label: 'Be Disabled', value: 'be.disabled'},
-    {label: 'Not Be Disabled', value: 'not.be.disabled'},
+    {label: 'Have length', value: 'have.length'},
+
 ];
 const checkedTypes = [
     {label: 'Be Checked', value: 'be.checked'},

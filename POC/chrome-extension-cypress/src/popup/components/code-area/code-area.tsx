@@ -24,7 +24,7 @@ export const CodeArea  = ({ setCodeAreaValue,describeTitle,code}) => {
     if(code!==''){
         for(let i = 0; i <= numOfTests;i++)
         {
-            testText += `it('${itTitles[i]}',()=>{\ncy.visit(${URL})\ncy.viewport(${vw},${vh})\n${codes[i]}\n});\n`
+            testText += `it('${itTitles[i]}',()=>{\ncy.visit("${URL}")\ncy.viewport(${vw},${vh})\n${codes[i]}\n});\n`
         }
     }
 

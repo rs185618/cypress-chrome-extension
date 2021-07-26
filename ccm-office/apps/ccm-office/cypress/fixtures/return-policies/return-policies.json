@@ -1,0 +1,97 @@
+[
+  {
+    "id": "4",
+    "policy_name": "rampolicy",
+    "policy_type": "TBR",
+    "status": true,
+    "locations": ["string"],
+    "start_period": "2021-07-19T00:00:00",
+    "end_period": "2021-07-18T00:00:00",
+    "return_best_for": true,
+    "reason_associations": [
+      {
+        "reasonCodeId": "string",
+        "disposalMethodDescription": [{ "culture": "string", "value": "string" }],
+        "productIds": ["string"],
+        "categoryIds": ["string"]
+      }
+    ],
+    "receipt_timeframe": 0
+  },
+  {
+    "id": "3",
+    "policy_name": "maxpolicy",
+    "policy_type": "TBR",
+    "status": true,
+    "locations": ["string"],
+    "start_period": "2021-07-19T00:00:00",
+    "end_period": "2024-07-18T00:00:00",
+    "return_best_for": true,
+    "reason_associations": [
+      {
+        "reasonCodeId": "string",
+        "disposalMethodDescription": [{ "culture": "string", "value": "string" }],
+        "productIds": ["string"],
+        "categoryIds": ["string"]
+      }
+    ],
+    "receipt_timeframe": 0
+  },
+  {
+    "id": "1",
+    "policy_name": "wolfpolicy",
+    "policy_type": "TBR",
+    "status": true,
+    "locations": ["string"],
+    "start_period": "2021-09-24T00:00:00",
+    "end_period": "2027-07-18T00:00:00",
+    "return_best_for": true,
+    "reason_associations": [
+      {
+        "reasonCodeId": "string",
+        "disposalMethodDescription": [{ "culture": "string", "value": "string" }],
+        "productIds": ["string"],
+        "categoryIds": ["string"]
+      }
+    ],
+    "receipt_timeframe": 0
+  },
+  {
+    "id": "2",
+    "policy_name": "wolfpolicy",
+    "policy_type": "TBR",
+    "status": true,
+    "locations": ["string"],
+    "start_period": "2021-09-24T00:00:00",
+    "end_period": "2027-07-18T00:00:00",
+    "return_best_for": true,
+    "reason_associations": [
+      {
+        "reasonCodeId": "string",
+        "disposalMethodDescription": [{ "culture": "string", "value": "string" }],
+        "productIds": ["string"],
+        "categoryIds": ["string"]
+      }
+    ],
+    "receipt_timeframe": 0
+  },
+  {
+    "id": "5",
+    "policy_name": "benreturnpolicytest",
+    "policy_type": "TBR",
+    "status": true,
+    "locations": ["string"],
+    "start_period": "2021-07-18T00:00:00",
+    "end_period": "2021-07-18T00:00:00",
+    "return_best_for": true,
+    "reason_associations": [
+      {
+        "reasonCodeId": "string",
+        "disposalMethodDescription": [{ "culture": "string", "value": "string" }],
+        "productIds": ["string"],
+        "categoryIds": ["string"]
+      }
+    ],
+    "receipt_timeframe": 0
+  }
+]

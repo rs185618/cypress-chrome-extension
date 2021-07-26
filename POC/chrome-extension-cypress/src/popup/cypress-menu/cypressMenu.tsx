@@ -180,7 +180,7 @@ const CypressMenu = () => {
     }
     const onTypeChange = (e) => {
         setSelectType(e.value);
-        let value = ""
+        let value = null;
         let toggleView = displayMenu;
         const cySelectorElement = document.querySelector(cySelector);
         switch (e.value) {
@@ -196,7 +196,9 @@ const CypressMenu = () => {
             default:
                 utils.generateCode(`cy.get(${cySelector}).should("${e.value}");`);
         }
-        utils.generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}");`);
+        if(value !== null){
+            utils.generateCode(`cy.get(${cySelector}).should("${e.value}", "${value}");`);
+        }
         toggleView && toggleView();
     }
     const onContainerClick = (e) => {
