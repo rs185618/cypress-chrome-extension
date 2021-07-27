@@ -2,9 +2,13 @@ import React, {FC, useEffect, useState} from 'react';
 import {RecordButtons} from "../components/record-buttons/record-buttons";
 import {CodeArea} from "../components/code-area/code-area";
 import './record-container.scss'
+import {Button} from "primereact/button";
 export const RecordContainer: FC<any>  = ({...props}) => {
     const [codeArea, setCodeArea] = useState('');
     const [describeTitle, setDescribeTitle] = useState('');
+    const [qaMode,setQaMode] = useState(false);
+    const [email,setEmail] = useState('');
+    const [url,setURL] = useState('');
 
 
     useEffect(() => {
@@ -36,15 +40,48 @@ export const RecordContainer: FC<any>  = ({...props}) => {
             setCodeArea('')
         });
     }
+    const onBlurURL = e=>{
+        chrome.storage.local.set({"URLToTest":url});
+    }
 
-    return <div className={'record-container'}>
-        <RecordButtons onClearTextArea={clearCode} hidePopup={props.hidePopup}/>
-        <div className='test-title'>
-            <label>Describe Title:</label>
-            <input value={describeTitle} onChange={e=>setDescribeTitle(e.target.value)}/>
-        </div>
-        <CodeArea code ={codeArea}describeTitle={describeTitle} setCodeAreaValue={(value) => updateCode(value)}/>
+    const emailText = `mailto:${email}?body=test&subject=Reproduction steps`
+    return(
+      <div className={'record-container'}>
+          <div className="toggle-container">
+              <h1>CLIENT/QA</h1>
+              <label className="switch">
+                  <input type="checkbox" checked={qaMode} onChange={()=>setQaMode(()=>!qaMode)}/>
+                  <span className="slider round"></span>
+              </label>
+          </div>
+          <div className="input-container">
+              <div className="container">
+                  <label htmlFor="email">Email:</label>
+                  <input id="email" value={email} onChange={e=>setEmail(e.target.value)}/>
+              </div>
+              <div className="container">
+                  <label htmlFor="url">URL:</label>
+                  <input id="url"
+                         value={url}
+                         onChange={(e)=>setURL(e.target.value)}
+                         onBlur={onBlurURL}
+                  />
+              </div>
+          </div>
 
 
-    </div>
+          {qaMode&&<>
+              <RecordButtons onClearTextArea={clearCode} hidePopup={props.hidePopup}/>
+              <div className='test-title'>
+                  <label>Describe Title:</label>
+                  <input value={describeTitle} onChange={e=>setDescribeTitle(e.target.value)}/>
+              </div>
+              <CodeArea code ={codeArea}describeTitle={describeTitle} setCodeAreaValue={(value) => updateCode(value)}/>
+          </>}
+          <a href={emailText} className="send-button">Send To QA Team</a>
+
+
+
+
+    </div>)
 }

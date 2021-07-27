@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
 import { Button } from 'primereact/button';
 export const RecordButtons: FC<any>  = ({...props}) => {
-    const [recordValue, setRecordValue] = useState('stop')
+    const [recordValue, setRecordValue] = useState('stop');
 
     useEffect(() => {
         chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
