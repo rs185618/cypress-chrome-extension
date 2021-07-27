@@ -10,23 +10,20 @@ export const RecordContainer: FC<any> = ({...props}) => {
   const [qaMode, setQaMode] = useState(false);
   const [url, setURL] = useState('');
 
+
   useEffect(() => {
-    chrome.storage.local.get(["qaMode", "URLToTest"], items => {
+    chrome.storage.local.get(/* String or Array */["selector", "generatedCode", "itTitles", 'testSuitIndex',"qaMode", "URLToTest"], (items) => {
+      if (items['generatedCode']) {
+        setCodeArea(items['generatedCode'].join('\n'));
+      }
       if (items["qaMode"]) {
         setQaMode(items["qaMode"]);
       }
       if (items["URLToTest"]) {
         setURL(items["URLToTest"]);
       }
-    })
-  }, [])
-  useEffect(() => {
-    chrome.storage.local.get(/* String or Array */["selector", "generatedCode", "itTitles", 'testSuitIndex'], (items) => {
-      if (items['generatedCode']) {
-        setCodeArea(items['generatedCode'].join('\n'));
-      }
     });
-  }, [])
+  }, [setCodeArea,setQaMode,setURL]);
 
   useEffect(() => {
     chrome.storage.local.get(['generatedCode', 'testSuitIndex', 'itTitles'], (items) => {
@@ -84,14 +81,14 @@ export const RecordContainer: FC<any> = ({...props}) => {
       </div>
 
 
-      {qaMode && <div className={"animated-container"}>
+      <div className={qaMode?"animated-container":"invisible-container"}>
         <RecordButtons onClearTextArea={clearCode} hidePopup={props.hidePopup}/>
         <div className='test-title'>
           <label>Describe Title:</label>
           <input value={describeTitle} onChange={e => setDescribeTitle(e.target.value)}/>
         </div>
         <CodeArea code={codeArea} describeTitle={describeTitle} setCodeAreaValue={(value) => updateCode(value)}/>
-      </div>}
+      </div>
         {!qaMode && <Button>Copy code</Button>}
 
 
