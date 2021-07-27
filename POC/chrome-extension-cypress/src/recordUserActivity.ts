@@ -17,17 +17,24 @@ const changeHandler = (e) => {
 }
 
 const setTostorage = (str) => {
-    console.log(str);
     chrome.storage.local.get([STORAGE_KEY], (result) => {
-        chrome.storage.local.set({[STORAGE_KEY]: `${result[STORAGE_KEY] ? result[STORAGE_KEY] : ''} /n ${str}`});
+        chrome.storage.local.set({[STORAGE_KEY]: `${result[STORAGE_KEY] ? result[STORAGE_KEY] : ''} 
+         ${str}`});
+        console.log(result[STORAGE_KEY]);
     });
 }
 
-export const addListeners = () => {
-    const str = `cy.visit('${location.href}')`;
-    setTostorage(str);
-    document.addEventListener('click', clickHandler, true);
-    document.addEventListener('change', changeHandler, false);
+export const addListeners =  () => {
+    chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
+        const url = tabs[0].url.replace(/^(?:\/\/|[^\/]+)*\//, "");
+        const str = `cy.visit('${url}')`;
+        if(url){
+            setTostorage(str);
+        }
+        document.addEventListener('click', clickHandler, true);
+        document.addEventListener('change', changeHandler, false);
+    });
+
 }
 
 export const removeListeners = () => {

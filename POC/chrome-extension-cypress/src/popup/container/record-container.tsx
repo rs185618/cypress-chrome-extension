@@ -12,7 +12,7 @@ export const RecordContainer: FC<any> = ({...props}) => {
 
 
   useEffect(() => {
-    chrome.storage.local.get(/* String or Array */["selector", "generatedCode", "itTitles", 'testSuitIndex',"qaMode", "URLToTest"], (items) => {
+    chrome.storage.local.get(/* String or Array */["selector","USER_ACTIVITIES", "generatedCode", "itTitles", 'testSuitIndex',"qaMode", "URLToTest"], (items) => {
       if (items['generatedCode']) {
         setCodeArea(items['generatedCode'].join('\n'));
       }
@@ -22,6 +22,7 @@ export const RecordContainer: FC<any> = ({...props}) => {
       if (items["URLToTest"]) {
         setURL(items["URLToTest"]);
       }
+      console.log('hey',items["USER_ACTIVITIES"]);
     });
   }, [setCodeArea,setQaMode,setURL]);
 

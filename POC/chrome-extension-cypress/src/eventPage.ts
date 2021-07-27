@@ -7,11 +7,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     const USER_ACTIVITIES_STORAGE_KEY = 'USER_ACTIVITIES';
 
     switch (true){
-        case request.sendEmailTo:
-            chrome.storage.local.get([USER_ACTIVITIES_STORAGE_KEY], (result) => {
-                const href = `mailto:${request.sendEmailTo}?body=${result[USER_ACTIVITIES_STORAGE_KEY]}&subject=Reproduction steps`
-            });
-            break;
         case request.modeChanged:
             if(request.modeChanged){
                 recordUserActivity.addListeners();
