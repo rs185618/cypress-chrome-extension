@@ -10,7 +10,19 @@ export const RecordContainer: FC<any>  = ({...props}) => {
     const [email,setEmail] = useState('');
     const [url,setURL] = useState('');
 
-
+    useEffect(()=>{
+        chrome.storage.local.get(["qaMode","email","URLToTest"],items=>{
+            if(items["qaMode"]){
+                setQaMode(items["qaMode"]);
+            }
+            if(items["email"]){
+                setEmail(items["email"]);
+            }
+            if(items["URLToTest"]){
+                setURL(items["URLToTest"]);
+            }
+        })
+    },[])
     useEffect(() => {
         chrome.storage.local.get(/* String or Array */["selector", "generatedCode","itTitles",'testSuitIndex'], (items) => {
             if (items['generatedCode']) {
@@ -40,8 +52,15 @@ export const RecordContainer: FC<any>  = ({...props}) => {
             setCodeArea('')
         });
     }
-    const onBlurURL = e=>{
-        chrome.storage.local.set({"URLToTest":url});
+    const onBlurURL = e =>{
+        chrome.storage.local.set({"URLToTest":e.target.value});
+    }
+    const onBlurEmail = e =>{
+        chrome.storage.local.set({"email":e.target.value});
+    }
+    const changeMode = e =>{
+        setQaMode(()=>!qaMode);
+        chrome.storage.local.set({"qaMode":!qaMode});
     }
 
     const emailText = `mailto:${email}?body=test&subject=Reproduction steps`
@@ -50,14 +69,17 @@ export const RecordContainer: FC<any>  = ({...props}) => {
           <div className="toggle-container">
               <h1>CLIENT/QA</h1>
               <label className="switch">
-                  <input type="checkbox" checked={qaMode} onChange={()=>setQaMode(()=>!qaMode)}/>
+                  <input type="checkbox" checked={qaMode} onChange={changeMode}/>
                   <span className="slider round"></span>
               </label>
           </div>
           <div className="input-container">
               <div className="container">
                   <label htmlFor="email">Email:</label>
-                  <input id="email" value={email} onChange={e=>setEmail(e.target.value)}/>
+                  <input id="email"
+                         value={email}
+                         onChange={e=>setEmail(e.target.value)}
+                         onBlur={onBlurEmail}/>
               </div>
               <div className="container">
                   <label htmlFor="url">URL:</label>
