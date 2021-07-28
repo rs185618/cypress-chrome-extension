@@ -67,7 +67,7 @@ export const RecordContainer: FC<any> = ({...props}) => {
 
   const onCopyCodeClick = () => {
     chrome.storage.local.get(['USER_ACTIVITIES'], (result) => {
-      const text = result['USER_ACTIVITIES'];
+      const text = result['USER_ACTIVITIES'] || ' ';
       var copyFrom = document.createElement("textarea");
       copyFrom.style.height='0px';
       copyFrom.textContent = text;
@@ -76,6 +76,11 @@ export const RecordContainer: FC<any> = ({...props}) => {
       document.execCommand('copy');
       document.body.removeChild(copyFrom);
     });
+  }
+
+  const onClearCodeClick = () => {
+    chrome.storage.local.remove('USER_ACTIVITIES');
+    onCopyCodeClick();
   }
 
   return (
@@ -109,7 +114,15 @@ export const RecordContainer: FC<any> = ({...props}) => {
         </div>
         <CodeArea code={codeArea} describeTitle={describeTitle} setCodeAreaValue={(value) => updateCode(value)}/>
       </div>
-        {!qaMode && <Button onClick={onCopyCodeClick}>Copy code</Button>}
+        {
+          !qaMode ?
+              <div>
+                <Button onClick={onCopyCodeClick}>Copy code</Button>
+                <Button onClick={onClearCodeClick}>Clear code</Button>
+              </div>
+
+              : ''
+        }
 
 
     </div>)
