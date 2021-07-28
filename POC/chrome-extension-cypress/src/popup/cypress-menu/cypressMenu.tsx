@@ -151,8 +151,8 @@ const CypressMenu = () => {
     }
     const onTitleChange = () => {
         chrome.storage.local.get(["itTitles", 'testSuitIndex',], (items) => {
-            const index = items["testSuitIndex"];
-            const itTitles = items["itTitles"];
+            const index = items["testSuitIndex"] ? items["testSuitIndex"]:0;
+            const itTitles = items["itTitles"] ? items["itTitles"] :[];
             itTitles[index] = testTitle;
             chrome.storage.local.set({"itTitles": itTitles}, () => {
 

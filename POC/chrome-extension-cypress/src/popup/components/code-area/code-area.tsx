@@ -15,9 +15,9 @@ export const CodeArea  = ({ setCodeAreaValue,describeTitle,code}) => {
     });
     useEffect(()=>{
         chrome.storage.local.get(["selector", "generatedCode","itTitles",'testSuitIndex'], (items) => {
-            setItTitles(items['itTitles']);
+            setItTitles(items['itTitles'] ? items['itTitles']:[]);
             setNumOfTests(items['testSuitIndex']);
-            setCodes(items['generatedCode']);
+            setCodes(items['generatedCode'] ? items['generatedCode']:[]);
         });
     }, []);
     let testText = '';

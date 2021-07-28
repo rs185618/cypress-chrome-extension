@@ -31,9 +31,9 @@ export const RecordContainer: FC<any> = ({...props}) => {
 
   useEffect(() => {
     chrome.storage.local.get(['generatedCode', 'testSuitIndex', 'itTitles'], (items) => {
-      let generatedCode = items['generatedCode'];
-      let index = items['testSuitIndex'];
-      generatedCode[index] = codeArea;
+      let generatedCode = items['generatedCode'] ? items['generatedCode'] :[];
+      let index = items['testSuitIndex'] ? items['testSuitIndex'] : 0;
+      //generatedCode[index] = codeArea;
       chrome.storage.local.set({
         "generatedCode": generatedCode,
         "testSuitIndex": index,

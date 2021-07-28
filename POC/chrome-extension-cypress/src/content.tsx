@@ -6,7 +6,7 @@ const id = 'cypress-menu-assistant';
 
 const renderCypressMenu = () => {
     window.onload = function() {
-        chrome.storage.local.set({ "refresh":  true});
+        chrome.storage.local.set({ "refresh":  true,"testSuitIndex":0});
     };
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         switch(true){
@@ -18,7 +18,8 @@ const renderCypressMenu = () => {
                 break;
             case request.menu ==='stopped':
                 chrome.storage.local.get(['testSuitIndex','itTitles'],(items)=>{
-                    chrome.storage.local.set({'testSuitIndex':items['testSuitIndex'] + 1,'itTitles':items['itTitles']})
+                    const newTestIndex = items['testSuitIndex'] ? items['testSuitIndex'] + 1 : 1;
+                    chrome.storage.local.set({'testSuitIndex':newTestIndex})
                 })
                 break;
             case request.modeChanged:

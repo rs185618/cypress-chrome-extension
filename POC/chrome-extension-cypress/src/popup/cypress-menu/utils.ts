@@ -31,8 +31,9 @@ export const isCanCheck = (elem: HTMLElement): boolean  => {
 export const generateCode = (template: string): void => {
     chrome.storage.local.get(["selector", "generatedCode","testSuitIndex"], (items) => {
         const clickedSelector = items['selector'];
-        let generatedCode = items['generatedCode'];
-        const index = items['testSuitIndex']
+        let generatedCode = items['generatedCode'] ? items['generatedCode']:[];
+        const index = items['testSuitIndex'];
+        console.log(index);
         if (items?.generatedCode) {
             generatedCode[index] = `${generatedCode[index] ? generatedCode[index] + '\n' : ''}${template.replace('{0}', clickedSelector.cySelector).replace('{1}', clickedSelector.value)
               .replace('{2}', clickedSelector.text)}`

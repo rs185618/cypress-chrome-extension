@@ -13,8 +13,12 @@ export const RecordButtons: FC<any>  = ({...props}) => {
         chrome.storage.onChanged.addListener(function (changes, namespace) {
             if(changes.refresh){
                 setRecordValue('stop');
+                chrome.storage.local.set({"testSuitIndex":0});
+                chrome.storage.local.set({"itTitles":['']});
+                chrome.storage.local.set({"generatedCode":['']})
             }
             chrome.storage.local.set({ "refresh":  false});
+
         });
         chrome.storage.local.get(/* String or Array */["recorder"], (items) => {
             if (items && items['recorder']) setRecordValue(items['recorder'])
@@ -32,7 +36,6 @@ export const RecordButtons: FC<any>  = ({...props}) => {
     }, [recordValue])
 
     const record = () => {
-        chrome.storage.local.get(['testSuitIndex'],(items)=>{
             chrome.storage.local.set({ "recorder": `${recordValue == 'stop' ?  'start': 'stop'}` }, function(){
                 chrome.storage.local.set({ "popup": `${ (recordValue === 'start')}` } , function() {
                     chrome.tabs.query({active: true}, function(tabs) {
@@ -43,8 +46,6 @@ export const RecordButtons: FC<any>  = ({...props}) => {
 
                 })
             });
-        })
-
     }
 
 
