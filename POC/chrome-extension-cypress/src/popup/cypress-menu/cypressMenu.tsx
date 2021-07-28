@@ -26,11 +26,15 @@ const CypressMenu = () => {
 
         addEventListeners();
         chrome.runtime.onMessage.addListener((request) => {
-            if (request.menu === 'started') {
-                addEventListeners();
-            } else if (request.menu === 'stopped') {
-                removeEventListeners()
-            }
+            chrome.storage.local.get("popup",items=>{
+                if (request.menu === 'started' || (request.modeChanged === true && items["popup"]===false)) {
+                    addEventListeners();
+                }
+                if (request.menu === 'stopped'|| request.modeChanged === false) {
+                    removeEventListeners()
+                }
+            })
+
         });
 
 

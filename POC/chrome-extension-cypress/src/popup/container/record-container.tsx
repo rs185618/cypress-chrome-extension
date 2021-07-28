@@ -22,7 +22,6 @@ export const RecordContainer: FC<any> = ({...props}) => {
       if (items["URLToTest"]) {
         setURL(items["URLToTest"]);
       }
-      console.log('hey',items["USER_ACTIVITIES"]);
     });
   }, [setCodeArea,setQaMode,setURL]);
 
@@ -57,6 +56,9 @@ export const RecordContainer: FC<any> = ({...props}) => {
   const changeMode = e => {
     setQaMode(() => !qaMode);
     chrome.storage.local.set({"qaMode": !qaMode});
+    chrome.tabs.query({active: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {modeChanged: !qaMode });
+    })
   }
 
   return (
