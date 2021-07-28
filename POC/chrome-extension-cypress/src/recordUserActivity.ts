@@ -20,7 +20,6 @@ const setTostorage = (str) => {
     chrome.storage.local.get([STORAGE_KEY], (result) => {
         chrome.storage.local.set({[STORAGE_KEY]: `${result[STORAGE_KEY] ? result[STORAGE_KEY] : ''} 
          ${str}`});
-        console.log(result[STORAGE_KEY]);
     });
 }
 
