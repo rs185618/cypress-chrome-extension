@@ -22,6 +22,10 @@ export const RecordContainer: FC<any> = ({...props}) => {
       if (items["URLToTest"]) {
         setURL(items["URLToTest"]);
       }
+      console.log('hey',items["qaMode"]);
+      chrome.tabs.query({active: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id,{ modeChanged: items["qaMode"]});
+      });
     });
   }, [setCodeArea,setQaMode,setURL]);
 
@@ -54,11 +58,24 @@ export const RecordContainer: FC<any> = ({...props}) => {
     chrome.storage.local.set({"URLToTest": e.target.value});
   }
   const changeMode = e => {
-    setQaMode(() => !qaMode);
+    setQaMode( !qaMode);
     chrome.storage.local.set({"qaMode": !qaMode});
     chrome.tabs.query({active: true}, function(tabs) {
       chrome.tabs.sendMessage(tabs[0].id, {modeChanged: !qaMode });
     })
+  }
+
+  const onCopyCodeClick = () => {
+    chrome.storage.local.get(['USER_ACTIVITIES'], (result) => {
+      const text = result['USER_ACTIVITIES'];
+      var copyFrom = document.createElement("textarea");
+      copyFrom.style.height='0px';
+      copyFrom.textContent = text;
+      document.body.appendChild(copyFrom);
+      copyFrom.select();
+      document.execCommand('copy');
+      document.body.removeChild(copyFrom);
+    });
   }
 
   return (
@@ -92,7 +109,7 @@ export const RecordContainer: FC<any> = ({...props}) => {
         </div>
         <CodeArea code={codeArea} describeTitle={describeTitle} setCodeAreaValue={(value) => updateCode(value)}/>
       </div>
-        {!qaMode && <Button>Copy code</Button>}
+        {!qaMode && <Button onClick={onCopyCodeClick}>Copy code</Button>}
 
 
     </div>)

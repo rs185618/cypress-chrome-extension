@@ -31,7 +31,8 @@
         "storage",
         "webNavigation",
         "scripting",
-        "webRequest"
+        "webRequest",
+        "clipboardWrite"
     ],
     "host_permissions": [
         "http://*/*",

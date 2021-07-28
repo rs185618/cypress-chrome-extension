@@ -25,19 +25,17 @@ const setTostorage = (str) => {
 }
 
 export const addListeners =  () => {
-    chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
-        const url = tabs[0].url.replace(/^(?:\/\/|[^\/]+)*\//, "");
+        const url = window.location.href;
         const str = `cy.visit('${url}')`;
         if(url){
             setTostorage(str);
         }
         document.addEventListener('click', clickHandler, true);
         document.addEventListener('change', changeHandler, false);
-    });
-
 }
 
 export const removeListeners = () => {
+    chrome.storage.local.remove(STORAGE_KEY);
     document.removeEventListener('click', clickHandler, true);
     document.removeEventListener('change', changeHandler, false);
 }

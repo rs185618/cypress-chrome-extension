@@ -13,8 +13,6 @@ export default function Popup() {
 
     });
     chrome.storage.local.set({"itTitles":['']})
-    chrome.runtime.sendMessage({ popupMounted: true });
-
 
 
   }, []);
